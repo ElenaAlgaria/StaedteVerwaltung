@@ -1,0 +1,116 @@
+== edea Assignment 2 : Metropolis
+
+=== Bearbeitet von
+
+* Vorname Nachname
+
+=== Abgabe
+
+* Dienstag, 3.6.2024, 12:00 Uhr
+
+Die Abgabe erfolgt durch einen `Push` auf den `main`-Branch Ihres GitHub-Repositories.
+
+
+=== Initiale Schritte
+[circle]
+* Tragen Sie ihren Namen unter "Bearbeitet von" ein.
+* Pushen Sie diese Änderung am besten sofort ins Git-Repository (z.B. via `Git -> Commit… -> Commit&Push`)
+
+
+=== Die Aufgabe: Desktop Applikation zur Verwaltung von Städte-Informationen
+
+Im Zentrum steht die Verwaltung von Gemeinden und Städten mit mehr als 500 Einwohnern. Weltweit sind dies ca. 200'000. Dafür ist die Entwicklung von mindestens zwei Explorern und zwei Editoren notwendig (jeweils für Städte und Länder)
+
+Dieses Assignment entspricht einer typischen Situation, in der sich Software-Firmen häufig befinden. Es soll in sehr kurzer Zeit eine erste Version einer Geschäftsapplikation umgesetzt werden, die bereits eingesetzt werden kann und damit einen Nutzen beim Auftraggeber erzeugt. Auf dieser Basis wird dann ein längerfristiges Projekt definiert, bei dem die Geschäftsapplikation weiter optimiert wird. Projekte dieser Art werden teilweise auch bei der Projekt-Akquise verwendet und dienen als Nachweis der Kompetenz der Software-Firma.
+
+Dementsprechend besteht das Assignment aus zwei Teilen
+[circle]
+* _Entwurf_ der Applikation, so dass die Applikation _mit möglichst geringem Aufwand_ technisch umsetzbar ist. Normalerweise hat dieser Entwurf Schwächen im Bereich der Usability.
+** Dieser Entwurf muss nicht weiter dokumentiert werden (kein Wireframe muss abgegeben werden)
+** Empfehlung: suchen Sie in einem Team von 2-3 Personen nach der einfachsten Lösung
+* _Implementierung_ von `Metropolis`
+** basierend auf den Beispielen und insbesondere den `xtracted`-Packages aus `module08` und `module09`
+** die beiden Explorer müssen LazyLoading, Sortieren und Filtern unterstützen
+** die Editoren unterstützen Mehrsprachigkeit, Input-Validierung und Undo/Redo
+** das ist eine Einzelarbeit
+
+
+=== Anforderungen
+[circle]
+* Gewünschte Funktionalität
+** 2 Explorer, jeweils mit Lazy-Loading aus der lokalen Datenbank `metropolisDB`, Sortier- und Filter-Möglichkeiten auf mindestens vier Spalten
+*** Implementierung basiert auf den Beispielen aus `module08`
+*** `CityExplorer` für die ca. 200'000 Städte und Gemeinden
+*** `CountryExplorer` für die ca. 250 Länder
+** 2 Editoren, jeweils mit Header-, und Formular-Bereich
+*** Implementierung basiert auf den Beispielen aus `module09`
+*** `CityEditor` muss auf jeden Fall das Feld für den `COUNTRY_CODE` enthalten
+*** `CountryEditor` muss auf jeden Fall das Feld für `CAPITAL` enthalten
+** neue Städte/Länder können angelegt, bestehende aus der Datenbank gelöscht werden
+** die Explorer und Editoren müssen jeweils separat, mit einer eigenen Demo-Applikation gestartet werden können
+*** ein Beispiel wie das aussehen kann, finden Sie in `module06` beim `CodeKitchenTimer`
+** `Metropolis` verbindet die Explorer und Editoren zu einer Gesamtapplikation
+*** Selektion einer Stadt im `CityExplorer`
+**** "öffnet" den `CityEditor`
+**** zeigt die Länder-Information in geeigneter Weise im `CountryExplorer`/`CountryEditor` an
+*** Selektion eines Landes im `CountryExplorer`
+**** öffnet den `CountryEditor`
+**** zeigt die Information der Hauptstadt in geeigneter Weise im `CityExplorer`/`CityEditor` an
+**** zeigt die Städte dieses Landes in geeigneter Weise im `CityExplorer` an
+** _Wichtiger Hinweis_: Es sind Veränderungen und Erweiterungen in den `xtracted`-Packages notwendig. Diese können nicht unverändert übernommen werden.
+* Die Implementierungssprache für die gesamte Applikation ist Kotlin
+* Das UI ist mit Compose Desktop zu entwickeln
+* Verwendung von JDBC für die Datenbank-Zugriffe
+* Keine Verwendung von externen Libraries, die nicht bereits im Unterricht eingesetzt wurden
+
+
+=== Bewertung
+Es können in diesem Assignment maximal 52 Punkte erreicht werden. Der Fokus liegt dabei, neben der Umsetzung der gewünschten Funktionalität, auf der Code-Qualität.
+
+[cols=3, format=dsv]
+|===
+Bereich:Mögliche Punktzahl:Erreichte Punktzahl
+*Explorer*:*10 Pt. Total*: *0 Pt.*
+Darstellung des City Explorers:2 Pt.:0 Pt.
+Darstellung des Country Explorers:2 Pt.:0 Pt.
+Lazyloading:4 Pt.:0 Pt.
+Sortier- und Filtermögmlickeit auf mindestens 4 Spalten:2 Pt.:0 Pt.
+
+*Editor*:*14 Pt. Total*: *0 Pt.*
+Darstellung des City Editors:2 Pt.:0 Pt.
+Darstellung des Country Editors:2 Pt.:0 Pt.
+Erstellung eines neuen Eintrages in der Datebank (Städte / Länder):2 Pt.:0 Pt.
+Löschen eines Eintrages in der Datebank (Städte / Länder):2 Pt.:0 Pt.
+Updaten eines Eintrages in der Datebank (Städte / Länder):2 Pt.:0 Pt.
+Undo / Redo Funktionalität:2 Pt.:0 Pt.
+Mehrsprachigkeit:2 Pt.:0 Pt.
+
+*Metropolis*:*16 Pt. Total*:*0 Pt.*
+City Explorer und City Editor sind verbunden:1 Pt.:0 Pt.
+County Explorer und County Editor sind verbunden:1 Pt.:0 Pt.
+Selektion im Explorer zeigt den entsprechnenden Editor an:2 Pt.:0 Pt.
+Die modifizierten Daten werden im Explorer korrekt dargestellt:4 Pt.:0 Pt.
+Die Applikation verbindet die Explorer und Editoren zu einer Gesamtapplikation:8 Pt.:0 Pt.
+
+*Architektur*:*12 Pt. Total*:*0 Pt.*
+Klare Aufgabenverteilung zwischen Model und View:3 Pt.:0 Pt.
+Saubere Aufteilung der Composables in Sub-Composables:2 Pt.:0 Pt.
+Code Qualitätt:5 Pt.:0 Pt.
+Korrekte Anwendung von Coroutines:2 Pt.:0 Pt.
+|===
+
+Die Note wird wie folgt berechnet und macht 50% der Gesamtnote aus.
+
+Note = ((Erreichte Punkte / 52) * 5) + 1
+
+
+
+=== Compose Desktop Application
+Sie können eine "doppelklickbare" Applikation und einen dazugehörigen Installer generieren lassen.
+
+Dazu in `src/main/kotlin/main.kt` die zu startende Applikation eintragen.
+
+* `./gradlew run` - startet die Applikation (ist die richtige Applikation eingetragen?)
+* `./gradlew packageDistributionForCurrentOS` - erzeugt eine doppelklickbare Applikation und einen Installer (siehe  `build/compose/binaries`)
+
+Dafür muss die Datenbank jedoch ausserhalb der Applikation (des jar-Files) liegen.
