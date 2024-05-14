@@ -29,7 +29,7 @@ Dementsprechend besteht das Assignment aus zwei Teilen
 ** Dieser Entwurf muss nicht weiter dokumentiert werden (kein Wireframe muss abgegeben werden)
 ** Empfehlung: suchen Sie in einem Team von 2-3 Personen nach der einfachsten Lösung
 * _Implementierung_ von `Metropolis`
-** basierend auf den Beispielen und insbesondere den `xtracted`-Packages aus `module08` und `module09`
+** basierend auf den Beispielen und insbesondere den `xtracted1`-Packages aus `module08` und `module09`
 ** die beiden Explorer müssen LazyLoading, Sortieren und Filtern unterstützen
 ** die Editoren unterstützen Mehrsprachigkeit, Input-Validierung und Undo/Redo
 ** das ist eine Einzelarbeit
@@ -57,7 +57,7 @@ Dementsprechend besteht das Assignment aus zwei Teilen
 **** öffnet den `CountryEditor`
 **** zeigt die Information der Hauptstadt in geeigneter Weise im `CityExplorer`/`CityEditor` an
 **** zeigt die Städte dieses Landes in geeigneter Weise im `CityExplorer` an
-** _Wichtiger Hinweis_: Es sind Veränderungen und Erweiterungen in den `xtracted`-Packages notwendig. Diese können nicht unverändert übernommen werden.
+** _Wichtiger Hinweis_: Es sind Veränderungen und Erweiterungen in den `xtracted1`-Packages notwendig. Diese können nicht unverändert übernommen werden.
 * Die Implementierungssprache für die gesamte Applikation ist Kotlin
 * Das UI ist mit Compose Desktop zu entwickeln
 * Verwendung von JDBC für die Datenbank-Zugriffe
