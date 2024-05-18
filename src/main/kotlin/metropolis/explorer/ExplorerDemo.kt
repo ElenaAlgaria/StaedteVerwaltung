@@ -4,9 +4,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.window.application
 import metropolis.explorer.controller.cityController
 import metropolis.explorer.controller.countryController
-import metropolis.explorer.repository.cityRepository
+import metropolis.metropolis.repository.cityRepository
 import metropolis.explorer.view.ExplorerWindow
-import metropolis.explorer.repository.countryRepository
+import metropolis.metropolis.repository.countryRepository
 import metropolis.xtracted.repository.urlFromResources
 
 
@@ -20,7 +20,7 @@ fun main() {
     val cityController = cityController(cityRepository)
 
     var tabIndex by mutableStateOf(0)
-
+    var nameCountry = "null"
     application {
         when (tabIndex) {
             0 ->
@@ -32,8 +32,10 @@ fun main() {
                         idProvider = { it.isoNumeric },
                         trigger = { triggerAction(it) },
                         tabIndex = tabIndex,
-                        tabChange = {tabIndex = it}
+                        tabChange = {tabIndex = it},
+                        selected = {}
                     )
+                    println("hää")
                 }
 
             else ->
@@ -45,7 +47,8 @@ fun main() {
                         idProvider = { it.id },
                         trigger = { triggerAction(it) },
                         tabIndex = tabIndex,
-                        tabChange = {tabIndex = it}
+                        tabChange = {tabIndex = it},
+                        selected = {}
                     )
                 }
         }

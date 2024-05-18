@@ -14,13 +14,13 @@ import metropolis.xtracted.data.UNORDERED
 import metropolis.xtracted.model.TableColumn
 import metropolis.xtracted.model.TableState
 import metropolis.xtracted.repository.Identifiable
-import metropolis.xtracted.repository.LazyRepository
+import metropolis.xtracted.repository.CRUDLazyRepository
 
 
 class LazyTableController<T: Identifiable>(title                  : String,
-                             private val repository : LazyRepository<T>,
-                             columns                : List<TableColumn<T, *>>,
-                             private val defaultItem: T) :
+                                           private val repository : CRUDLazyRepository<T>,
+                                           columns                : List<TableColumn<T, *>>,
+                                           private val defaultItem: T) :
         ControllerBase<TableState<T>, LazyTableAction>(initialState = TableState(title            = title,
                                                                                  triggerRecompose = false,
                                                                                  allIds           = repository.readFilteredIds(emptyList(), SortDirective(null)),

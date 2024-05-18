@@ -1,4 +1,4 @@
-package metropolis.explorer.data
+package metropolis.metropolis.data
 
 import java.util.Date
 import metropolis.xtracted.repository.Identifiable

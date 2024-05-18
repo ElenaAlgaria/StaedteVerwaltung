@@ -2,7 +2,7 @@ package metropolis.xtracted.model
 
 import java.util.*
 
-data class EditorState<D>(val title      : Translatable,
+data class EditorState<T>(val title      : Translatable,
                           val locale     : Locale             = CH,
                           val attributes : List<Attribute<*>> = emptyList()) {
     val changed : Boolean

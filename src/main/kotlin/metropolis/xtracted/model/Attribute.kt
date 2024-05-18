@@ -17,7 +17,7 @@ data class Attribute<T : Any>(val id                 : AttributeId,
                               val validationResult   : ValidationResult,
                               val span               : Int,
                               val dependentAttributes: Map<AttributeId, (Attribute<T>, Attribute<*>) -> Attribute<*>>
-                             ){
+){
     val changed : Boolean
         get() = value != persistedValue
 
@@ -37,20 +37,20 @@ fun stringAttribute(id                 : AttributeId,
                     span               : Int                                                                 = 1,
                     dependentAttributes: Map<AttributeId, (Attribute<String>, Attribute<*>) -> Attribute<*>> = emptyMap())   =
     Attribute(id                  = id,
-              value               = value,
-              persistedValue      = value,
-              valueAsText         = formatter(value, value.format(nullFormat = "")),
-              formatter           = formatter,
-              converter           = converter,
-              unit                = unit,
-              required            = required,
-              readOnly            = readOnly,
-              syntaxValidator     = syntaxValidator,
-              semanticValidator   = semanticValidator,
-              validationResult    = syntaxValidator(formatter(value, value.format(""))),
-              span                = span,
-              dependentAttributes = dependentAttributes
-             )
+        value               = value,
+        persistedValue      = value,
+        valueAsText         = formatter(value, value.format(nullFormat = "")),
+        formatter           = formatter,
+        converter           = converter,
+        unit                = unit,
+        required            = required,
+        readOnly            = readOnly,
+        syntaxValidator     = syntaxValidator,
+        semanticValidator   = semanticValidator,
+        validationResult    = syntaxValidator(formatter(value, value.format(""))),
+        span                = span,
+        dependentAttributes = dependentAttributes
+    )
 
 fun doubleAttribute(id               : AttributeId,
                     value            : Double?,
@@ -61,20 +61,44 @@ fun doubleAttribute(id               : AttributeId,
                     readOnly         : Boolean                                                               = false,
                     dependentAttributes: Map<AttributeId, (Attribute<Double>, Attribute<*>) -> Attribute<*>> = emptyMap())  =
     Attribute(id                  = id,
-              value               = value,
-              persistedValue      = value,
-              valueAsText         = value.format(userInput = value.toString(), nullFormat = ""),
-              formatter           = { value, userInput -> value.format(userInput = userInput, nullFormat = "") },
-              converter           = { it.asDouble() },
-              unit                = unit,
-              required            = required,
-              readOnly            = readOnly,
-              syntaxValidator     = { it.matches(validationRegex).asValidationResult(ErrorMessage.NOT_A_DOUBLE) },
-              semanticValidator   = semanticValidator,
-              validationResult    = ValidationResult(true, null),
-              span                = 1,
-              dependentAttributes = dependentAttributes
-             )
+        value               = value,
+        persistedValue      = value,
+        valueAsText         = value.format(userInput = value.toString(), nullFormat = ""),
+        formatter           = { value, userInput -> value.format(userInput = userInput, nullFormat = "") },
+        converter           = { it.asDouble() },
+        unit                = unit,
+        required            = required,
+        readOnly            = readOnly,
+        syntaxValidator     = { it.matches(validationRegex).asValidationResult(ErrorMessage.NOT_A_DOUBLE) },
+        semanticValidator   = semanticValidator,
+        validationResult    = ValidationResult(true, null),
+        span                = 1,
+        dependentAttributes = dependentAttributes
+    )
+
+fun intAttribute(id               : AttributeId,
+                 value            : Int?,
+                 validationRegex  : Regex                                                                 = floatCHRegex,
+                 semanticValidator: (Int?) -> ValidationResult                                         = { ValidationResult(true, null) },
+                 unit             : String                                                                = "",
+                 required         : Boolean                                                               = false,
+                 readOnly         : Boolean                                                               = false,
+                 dependentAttributes: Map<AttributeId, (Attribute<Int>, Attribute<*>) -> Attribute<*>> = emptyMap())  =
+    Attribute(id                  = id,
+        value               = value,
+        persistedValue      = value,
+        valueAsText         = value.format(userInput = value.toString(), nullFormat = ""),
+        formatter           = { value, userInput -> value.format(userInput = userInput, nullFormat = "") },
+        converter           = { it.asInt() },
+        unit                = unit,
+        required            = required,
+        readOnly            = readOnly,
+        syntaxValidator     = { it.matches(validationRegex).asValidationResult(ErrorMessage.NOT_A_DOUBLE) },
+        semanticValidator   = semanticValidator,
+        validationResult    = ValidationResult(true, null),
+        span                = 1,
+        dependentAttributes = dependentAttributes
+    )
 
 
 interface AttributeId : Translatable
@@ -126,3 +150,9 @@ fun Number?.pp(pattern: String, nullFormat: String = ""): String {
 fun String?.format(nullFormat : String = "") = this ?: nullFormat
 
 
+fun Int?.format(userInput: String, nullFormat: String = "?", locale: Locale = CH) : String =
+    if (null == this) {
+        nullFormat
+    } else {
+        userInput;
+    }

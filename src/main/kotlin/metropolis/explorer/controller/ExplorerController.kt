@@ -2,25 +2,24 @@ package metropolis.explorer.controller
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
-import metropolis.explorer.data.City
-import metropolis.explorer.data.Country
-import metropolis.explorer.repository.CityColumn
+import metropolis.metropolis.data.City
+import metropolis.metropolis.data.Country
+import metropolis.metropolis.repository.CityColumn
 import metropolis.xtracted.model.DoubleColumn
 import metropolis.xtracted.model.IntColumn
 import metropolis.xtracted.model.StringColumn
-import metropolis.xtracted.repository.LazyRepository
-import metropolis.explorer.repository.CountryColumn
+import metropolis.xtracted.repository.CRUDLazyRepository
+import metropolis.metropolis.repository.CountryColumn
 import metropolis.xtracted.controller.lazyloading.LazyTableController
 import metropolis.xtracted.view.format
 
 private const val ELLIPSES = "..."
 
-fun countryController(repository: LazyRepository<Country>) =
+fun countryController(repository: CRUDLazyRepository<Country>) =
     LazyTableController(title       = "Countries of the World",
                         repository  = repository,
-                        defaultItem = Country(0,ELLIPSES, ELLIPSES, 0, ELLIPSES, ELLIPSES, ELLIPSES,
-                            0.0, 0, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES,
-                            ELLIPSES, ELLIPSES, 0, ELLIPSES, ELLIPSES),
+                        defaultItem = Country(0,ELLIPSES, 0, ELLIPSES, ELLIPSES, ELLIPSES, 0.0,
+                            0, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES),
                         columns     = listOf(StringColumn(header        = "Name",
                                                           width         = 250.dp,
                                                           alignment     = Alignment.CenterStart,
@@ -89,7 +88,7 @@ fun countryController(repository: LazyRepository<Country>) =
                                             )
                        )
 
-fun cityController(repository: LazyRepository<City>) =
+fun cityController(repository: CRUDLazyRepository<City>) =
     LazyTableController(title       = "Cities of the World",
         repository  = repository,
         defaultItem = City(id = 0, ELLIPSES, ELLIPSES, ELLIPSES, 0.0, 0.0, ELLIPSES,

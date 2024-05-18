@@ -29,7 +29,7 @@ Dementsprechend besteht das Assignment aus zwei Teilen
 ** Dieser Entwurf muss nicht weiter dokumentiert werden (kein Wireframe muss abgegeben werden)
 ** Empfehlung: suchen Sie in einem Team von 2-3 Personen nach der einfachsten Lösung
 * _Implementierung_ von `Metropolis`
-** basierend auf den Beispielen und insbesondere den `xtracted1`-Packages aus `module08` und `module09`
+** basierend auf den Beispielen und insbesondere den `xtracted1`-Packages aus `module08` und `metropolis`
 ** die beiden Explorer müssen LazyLoading, Sortieren und Filtern unterstützen
 ** die Editoren unterstützen Mehrsprachigkeit, Input-Validierung und Undo/Redo
 ** das ist eine Einzelarbeit
@@ -43,7 +43,7 @@ Dementsprechend besteht das Assignment aus zwei Teilen
 *** `CityExplorer` für die ca. 200'000 Städte und Gemeinden
 *** `CountryExplorer` für die ca. 250 Länder
 ** 2 Editoren, jeweils mit Header-, und Formular-Bereich
-*** Implementierung basiert auf den Beispielen aus `module09`
+*** Implementierung basiert auf den Beispielen aus `metropolis`
 *** `CityEditor` muss auf jeden Fall das Feld für den `COUNTRY_CODE` enthalten
 *** `CountryEditor` muss auf jeden Fall das Feld für `CAPITAL` enthalten
 ** neue Städte/Länder können angelegt, bestehende aus der Datenbank gelöscht werden

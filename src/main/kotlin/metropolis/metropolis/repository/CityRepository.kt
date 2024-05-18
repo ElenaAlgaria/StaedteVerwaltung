@@ -1,27 +1,27 @@
-package metropolis.explorer.repository
+package metropolis.metropolis.repository
 
 import metropolis.xtracted.data.DbColumn
-import metropolis.xtracted.repository.LazyRepository
-import metropolis.explorer.data.City
-import metropolis.explorer.repository.CityColumn.ID
-import metropolis.explorer.repository.CityColumn.NAME
-import metropolis.explorer.repository.CityColumn.ASCII_NAME
-import metropolis.explorer.repository.CityColumn.ALTERNATE_NAMES
-import metropolis.explorer.repository.CityColumn.LATITUDE
-import metropolis.explorer.repository.CityColumn.LONGITUDE
-import metropolis.explorer.repository.CityColumn.FEATURE_CLASS
-import metropolis.explorer.repository.CityColumn.FEATURE_CODE
-import metropolis.explorer.repository.CityColumn.COUNTRY_CODE
-import metropolis.explorer.repository.CityColumn.CC2
-import metropolis.explorer.repository.CityColumn.ADMIN1_CODE
-import metropolis.explorer.repository.CityColumn.ADMIN2_CODE
-import metropolis.explorer.repository.CityColumn.ADMIN3_CODE
-import metropolis.explorer.repository.CityColumn.ADMIN4_CODE
-import metropolis.explorer.repository.CityColumn.POPULATION
-import metropolis.explorer.repository.CityColumn.ELEVATION
-import metropolis.explorer.repository.CityColumn.DEM
-import metropolis.explorer.repository.CityColumn.TIMEZONE
-import metropolis.explorer.repository.CityColumn.MODIFICATION_DATE
+import metropolis.xtracted.repository.CRUDLazyRepository
+import metropolis.metropolis.data.City
+import metropolis.metropolis.repository.CityColumn.ID
+import metropolis.metropolis.repository.CityColumn.NAME
+import metropolis.metropolis.repository.CityColumn.ASCII_NAME
+import metropolis.metropolis.repository.CityColumn.ALTERNATE_NAMES
+import metropolis.metropolis.repository.CityColumn.LATITUDE
+import metropolis.metropolis.repository.CityColumn.LONGITUDE
+import metropolis.metropolis.repository.CityColumn.FEATURE_CLASS
+import metropolis.metropolis.repository.CityColumn.FEATURE_CODE
+import metropolis.metropolis.repository.CityColumn.COUNTRY_CODE
+import metropolis.metropolis.repository.CityColumn.CC2
+import metropolis.metropolis.repository.CityColumn.ADMIN1_CODE
+import metropolis.metropolis.repository.CityColumn.ADMIN2_CODE
+import metropolis.metropolis.repository.CityColumn.ADMIN3_CODE
+import metropolis.metropolis.repository.CityColumn.ADMIN4_CODE
+import metropolis.metropolis.repository.CityColumn.POPULATION
+import metropolis.metropolis.repository.CityColumn.ELEVATION
+import metropolis.metropolis.repository.CityColumn.DEM
+import metropolis.metropolis.repository.CityColumn.TIMEZONE
+import metropolis.metropolis.repository.CityColumn.MODIFICATION_DATE
 import metropolis.xtracted.repository.asSql
 
 
@@ -48,7 +48,7 @@ enum class CityColumn : DbColumn {
 }
 
 fun cityRepository(url: String) =
-    LazyRepository(url = url,
+    CRUDLazyRepository(url = url,
         table = "CITY",
         idColumn = ID,
         dataColumns = mapOf(

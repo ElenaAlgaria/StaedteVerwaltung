@@ -10,19 +10,19 @@ import metropolis.xtracted.model.EditorState
 import metropolis.xtracted.model.Translatable
 import metropolis.xtracted.model.UndoState
 import metropolis.xtracted.model.ValidationResult
-import metropolis.xtracted.repository.CrudRepository
+import metropolis.xtracted.repository.CRUDLazyRepository
 import metropolis.xtracted.repository.Identifiable
 
 
 
-class EditorController<D: Identifiable>(val id              : Int,                        // der EditorController verwaltet die Daten mit der ID 'id'
-                                        val repository      : CrudRepository<D>,
-                                        val asData          : (List<Attribute<*>>) -> D,  // die Attribute müssen in eine Instanz der data class umgewandelt werden können. Das wird z.B. für das Speichern benötigt
-                                        val asAttributeList : (D) -> List<Attribute<*>>,  // die Instanz der data class wird in eine Liste von Attributen gemappt. Damit werden die von der DB gelieferten Daten im Formular editierbar
+class EditorController<T: Identifiable>(val id              : Int,                        // der EditorController verwaltet die Daten mit der ID 'id'
+                                        val repository      : CRUDLazyRepository<T>,
+                                        val asData          : (List<Attribute<*>>) -> T,  // die Attribute müssen in eine Instanz der data class umgewandelt werden können. Das wird z.B. für das Speichern benötigt
+                                        val asAttributeList : (T) -> List<Attribute<*>>,  // die Instanz der data class wird in eine Liste von Attributen gemappt. Damit werden die von der DB gelieferten Daten im Formular editierbar
                                         title               : Translatable,
                                         locale              : Locale,
                                         testMode: Boolean = false) :
-        ControllerBase<EditorState<D>, EditorAction>(initialState = EditorState(title      = title,
+        ControllerBase<EditorState<T>, EditorAction>(initialState = EditorState(title      = title,
                                                                                 locale     = locale,
                                                                                 attributes = asAttributeList(repository.read(id)!!)), // der Editor liest initial die Daten von der DB
                                                      testMode = testMode) {
@@ -33,7 +33,7 @@ class EditorController<D: Identifiable>(val id              : Int,              
         get() = undoController.state
 
 
-    override fun executeAction(action: EditorAction): EditorState<D> =
+    override fun executeAction(action: EditorAction): EditorState<T> =
         when (action) {
             is EditorAction.Update    -> update(action.attribute, action.value)
 
@@ -46,7 +46,7 @@ class EditorController<D: Identifiable>(val id              : Int,              
             is EditorAction.SetLocale -> setLocale(action.locale)
         }
 
-    private fun update(attribute: Attribute<*>, valueAsText: String) : EditorState<D> {
+    private fun update(attribute: Attribute<*>, valueAsText: String) : EditorState<T> {
         val nextEditorState = state.copy(attributes = state.attributes.replaceAll(updateAffectedAttributes(attribute, valueAsText)))
 
         undoController.triggerAction(UndoAction.PushOnUndoStack(newApplicationState = nextEditorState))
@@ -54,13 +54,13 @@ class EditorController<D: Identifiable>(val id              : Int,              
         return nextEditorState
     }
 
-    private fun reload(): EditorState<D> {
+    private fun reload(): EditorState<T> {
         undoController.triggerAction(UndoAction.Reset)
 
         return state.copy(attributes = asAttributeList(repository.read(id)!!))
     }
 
-    private fun save() : EditorState<D> {
+    private fun save() : EditorState<T> {
         repository.update(asData(state.attributes))
         val updatedAttributes = buildList {
             for(attribute in state.attributes){
@@ -71,17 +71,17 @@ class EditorController<D: Identifiable>(val id              : Int,              
         return state.copy(attributes =  updatedAttributes)
     }
 
-    private fun undo() : EditorState<D>{
-        undoController.triggerAction(UndoAction.Undo<EditorState<D>>(updateApplicationState =  { state = it }))
+    private fun undo() : EditorState<T>{
+        undoController.triggerAction(UndoAction.Undo<EditorState<T>>(updateApplicationState =  { state = it }))
         return state
     }
 
-    private fun redo() : EditorState<D>{
-        undoController.triggerAction(UndoAction.Redo<EditorState<D>>(updateApplicationState =  { state = it }))
+    private fun redo() : EditorState<T>{
+        undoController.triggerAction(UndoAction.Redo<EditorState<T>>(updateApplicationState =  { state = it }))
         return state
     }
 
-    private fun setLocale(locale: Locale) : EditorState<D> {
+    private fun setLocale(locale: Locale) : EditorState<T> {
         val nextEditorState = state.copy(locale = locale)
         undoController.triggerAction(UndoAction.PushOnUndoStack(newApplicationState = nextEditorState))
 

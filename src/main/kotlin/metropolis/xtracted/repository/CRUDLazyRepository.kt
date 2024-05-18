@@ -5,11 +5,11 @@ import metropolis.xtracted.data.DbColumn
 import metropolis.xtracted.data.Filter
 import metropolis.xtracted.data.SortDirective
 
-class LazyRepository<T: Identifiable>(private val url        : String,
-                        private val table      : String,
-                        private val idColumn   : DbColumn,
-                        private val dataColumns: Map<DbColumn, (T) -> String?>,
-                        private val mapper     : ResultSet.() -> T) {
+class CRUDLazyRepository<T: Identifiable>(private val url        : String,
+                                          private val table      : String,
+                                          private val idColumn   : DbColumn,
+                                          private val dataColumns: Map<DbColumn, (T) -> String?>,
+                                          private val mapper     : ResultSet.() -> T) {
     fun createKey() : Int =
         insertAndCreateKey(url        = url,
             insertStmt = """INSERT INTO $table DEFAULT VALUES RETURNING $idColumn""".trimMargin())
@@ -22,12 +22,13 @@ class LazyRepository<T: Identifiable>(private val url        : String,
                 filters       = filters,
                 sortDirective = sortDirective)
 
-    fun read(id: Int) : T? =
+    fun read(id: Int) : T?  =
         readFirst(url     = url,
-                  table   = table,
-                  columns = dataColumns.keys.joinToString(),
-                  where   = "$idColumn = $id",
-                  map     = { mapper() })
+            table   = table,
+            columns = "$idColumn, " + dataColumns.keys.joinToString(),
+            where   = "$idColumn = $id",
+            map     = { mapper() })
+
     fun update(data: T){
         val valueUpdates = StringBuilder()
         dataColumns.entries.forEachIndexed { index, entry ->

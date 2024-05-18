@@ -86,7 +86,7 @@ fun <T> Table(tableState  : TableState<T>,
               itemProvider: (Int) -> T,
               idProvider  : (T) -> Int,
               trigger     : (LazyTableAction) -> Unit,
-              modifier    : Modifier = Modifier) {
+              modifier    : Modifier = Modifier){
 
     with(tableState){
         Box(modifier = modifier.background(color = tableBackground)
@@ -248,6 +248,7 @@ private fun<T> TableRow(tableState: TableState<T>, idx: Int, item: T, idProvider
 
         if(tableState.selectedId == idProvider(item)){
             modifier = modifier.border(width = 2.dp, color = selectedItemBorder , shape = RoundedCornerShape(6.dp))
+            println("its you its you its always you")
         }
 
         Row(modifier = modifier,
