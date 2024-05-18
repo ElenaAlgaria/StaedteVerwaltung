@@ -1,6 +1,9 @@
 package metropolis.explorer.data
 
+import metropolis.xtracted.repository.Identifiable
+
 data class Country(
+    override val id: Int,
     val isoAlpha2: String,
     val isoAlpha3: String,
     val isoNumeric: Int,
@@ -20,4 +23,4 @@ data class Country(
     val geoNameId: Int,
     val neighbours: String?,
     val equivalentFipsCode: String?
-)
+) : Identifiable

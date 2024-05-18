@@ -13,10 +13,11 @@ import metropolis.xtracted.data.SortDirective
 import metropolis.xtracted.data.UNORDERED
 import metropolis.xtracted.model.TableColumn
 import metropolis.xtracted.model.TableState
+import metropolis.xtracted.repository.Identifiable
 import metropolis.xtracted.repository.LazyRepository
 
 
-class LazyTableController<T>(title                  : String,
+class LazyTableController<T: Identifiable>(title                  : String,
                              private val repository : LazyRepository<T>,
                              columns                : List<TableColumn<T, *>>,
                              private val defaultItem: T) :

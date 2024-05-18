@@ -2,7 +2,9 @@ package metropolis.explorer.controller
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import metropolis.explorer.data.City
 import metropolis.explorer.data.Country
+import metropolis.explorer.repository.CityColumn
 import metropolis.xtracted.model.DoubleColumn
 import metropolis.xtracted.model.IntColumn
 import metropolis.xtracted.model.StringColumn
@@ -16,7 +18,7 @@ private const val ELLIPSES = "..."
 fun countryController(repository: LazyRepository<Country>) =
     LazyTableController(title       = "Countries of the World",
                         repository  = repository,
-                        defaultItem = Country(ELLIPSES, ELLIPSES, 0, ELLIPSES, ELLIPSES, ELLIPSES,
+                        defaultItem = Country(0,ELLIPSES, ELLIPSES, 0, ELLIPSES, ELLIPSES, ELLIPSES,
                             0.0, 0, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES,
                             ELLIPSES, ELLIPSES, 0, ELLIPSES, ELLIPSES),
                         columns     = listOf(StringColumn(header        = "Name",
@@ -87,3 +89,79 @@ fun countryController(repository: LazyRepository<Country>) =
                                             )
                        )
 
+fun cityController(repository: LazyRepository<City>) =
+    LazyTableController(title       = "Cities of the World",
+        repository  = repository,
+        defaultItem = City(id = 0, ELLIPSES, ELLIPSES, ELLIPSES, 0.0, 0.0, ELLIPSES,
+            ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, 0, 0,0,
+            ELLIPSES,  ELLIPSES
+        ),
+        columns     = listOf(StringColumn(header        = "Name",
+            width         = 250.dp,
+            alignment     = Alignment.CenterStart,
+            fixed         = true,
+            dbColumn      = CityColumn.NAME,
+            valueProvider = { it.name }
+        ),
+            StringColumn(header        = "Country Code",
+                width         = 250.dp,
+                alignment     = Alignment.CenterStart,
+                fixed         = true,
+                dbColumn      = CityColumn.COUNTRY_CODE,
+                valueProvider = { it.countryCode }
+            ),
+            StringColumn(header        = "Timezone",
+                width         = 250.dp,
+                alignment     = Alignment.CenterStart,
+                fixed         = false,
+                dbColumn      = CityColumn.TIMEZONE,
+                valueProvider = { it.timezone }
+            ),
+            DoubleColumn(header        = "LATITUDE",
+                width         = 80.dp,
+                alignment     = Alignment.Center,
+                fixed         = false,
+                dbColumn      = CityColumn.LATITUDE,
+                valueProvider = { it.latitude }
+            ),
+            DoubleColumn(header        = "Longitude",
+                width         = 250.dp,
+                alignment     = Alignment.CenterStart,
+                fixed         = false,
+                dbColumn      = CityColumn.LONGITUDE,
+                valueProvider = { it.longitude}
+            ),
+            StringColumn(header        = "Admin 1 Code",
+                width         = 120.dp,
+                alignment     = Alignment.CenterEnd,
+                fixed         = false,
+                dbColumn      = CityColumn.ADMIN1_CODE,
+                valueProvider = { it.admin1Code }
+            ),
+            IntColumn(header        = "Population",
+                width         = 120.dp,
+                alignment     = Alignment.CenterEnd,
+                fixed         = false,
+                dbColumn      = CityColumn.POPULATION,
+                valueProvider = { it.population },
+                formatter     = { it.format("%,d") }
+            ),
+            IntColumn(header        = "Elevation",
+                width         = 120.dp,
+                alignment     = Alignment.CenterEnd,
+                fixed         = false,
+                dbColumn      = CityColumn.ELEVATION,
+                valueProvider = { it.elevation },
+                formatter     = { it.format("%,d") }
+            ),
+
+            StringColumn(header        = "Modification Date",
+                width         = 80.dp,
+                alignment     = Alignment.Center,
+                fixed         = false,
+                dbColumn      = CityColumn.MODIFICATION_DATE,
+                valueProvider = { it.modificationDate }
+            ),
+
+        )
+    )

@@ -17,32 +17,46 @@ import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberWindowState
-import metropolis.explorer.data.Country
+import metropolis.explorer.data.City
 import metropolis.xtracted.model.TableState
 import metropolis.xtracted.controller.lazyloading.LazyTableAction
+import metropolis.xtracted.controller.lazyloading.LazyTableController
 import metropolis.xtracted.view.Table
 
-
-
 @Composable
-fun ApplicationScope.ExplorerWindow(state       : TableState<Country>,
-                                           dataProvider: (Int) -> Country,
-                                           idProvider  : (Country) -> Int,
-                                           trigger     : (LazyTableAction) -> Unit) {
-    Window(title          = state.title,
-           onCloseRequest = ::exitApplication,
-           state          = rememberWindowState(width    = 1200.dp,
-                                                height   = 500.dp,
-                                                position = WindowPosition(Alignment.Center))) {
+fun <T> ApplicationScope.ExplorerWindow(
+    state: TableState<T>,
+    dataProvider: (Int) -> T,
+    idProvider: (T) -> Int,
+    trigger: (LazyTableAction) -> Unit,
+    tabIndex: Int,
+    tabChange: (Int) -> Unit
+) {
+    Window(
+        title = state.title,
+        onCloseRequest = ::exitApplication,
+        state = rememberWindowState(
+            width = 1200.dp,
+            height = 500.dp,
+            position = WindowPosition(Alignment.Center)
+        )
+    ) {
 
-        TabScreen(state, dataProvider, idProvider, trigger)
+    TabScreen(state, dataProvider, idProvider, trigger, tabIndex, tabChange)
     }
+
 }
 
 @Composable
-fun TabScreen(state: TableState<Country>, dataProvider: (Int) -> Country, idProvider: (Country) -> Int, trigger: (LazyTableAction) -> Unit) {
-    var tabIndex by remember { mutableStateOf(0) }
-
+fun <T> TabScreen(
+    state: TableState<T>,
+    dataProvider: (Int) -> T,
+    idProvider: (T) -> Int,
+    trigger: (LazyTableAction) -> Unit,
+    tabIndex: Int,
+    tabChange: (Int) -> Unit
+    ) {
+//    var tabIndex by remember { mutableStateOf(0) }
     val tabs = listOf("Countries", "Cities")
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -50,30 +64,36 @@ fun TabScreen(state: TableState<Country>, dataProvider: (Int) -> Country, idProv
             tabs.forEachIndexed { index, title ->
                 Tab(text = { Text(title) },
                     selected = tabIndex == index,
-                    onClick = { tabIndex = index }
+                    onClick = { tabChange(index) }
                 )
             }
         }
         when (tabIndex) {
-            0 -> CountryExplorerUI(state, dataProvider, idProvider, trigger)
-            1 -> (null)
+            0 -> ExplorerUI(state, dataProvider, idProvider, trigger)
+            1 -> ExplorerUI(state, dataProvider, idProvider, trigger)
+            }
         }
-    }
 }
 
 @Composable
-fun CountryExplorerUI(state       : TableState<Country>,
-                      dataProvider: (Int) -> Country,
-                      idProvider  : (Country) -> Int,
-                      trigger     : (LazyTableAction) -> Unit) {
-    Column(modifier = Modifier.fillMaxSize()
-                              .background(Color(0xFFEEEEEE))
-                              .padding(10.dp)) {
-        Table(tableState   = state,
-              itemProvider = dataProvider,
-              idProvider   = idProvider,
-              trigger      = trigger,
-              modifier     = Modifier.weight(1.0f))
+fun <T> ExplorerUI(
+    state: TableState<T>,
+    dataProvider: (Int) -> T,
+    idProvider: (T) -> Int,
+    trigger: (LazyTableAction) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .background(Color(0xFFEEEEEE))
+            .padding(10.dp)
+    ) {
+        Table(
+            tableState = state,
+            itemProvider = dataProvider,
+            idProvider = idProvider,
+            trigger = trigger,
+            modifier = Modifier.weight(1.0f)
+        )
     }
 }
 
