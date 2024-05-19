@@ -58,7 +58,7 @@ fun countryRepository(url: String) =
         ),
         mapper = {
             Country(
-                id = getInt("${ISO_NUMERIC}"),
+                id = getInt("$ISO_NUMERIC"),
                 isoAlpha2 = getString("$ISO_ALPHA2"),
                 isoNumeric = getInt("$ISO_NUMERIC"),
                 fipsCode = getString("$FIPS_CODE"),

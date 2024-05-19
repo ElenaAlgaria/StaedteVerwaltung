@@ -1,19 +1,18 @@
 package metropolis.editor.controller
 
+import metropolis.metropolis.data.City
 import metropolis.metropolis.data.Country
 import metropolis.xtracted.controller.editor.EditorController
 import metropolis.xtracted.controller.editor.get
 import metropolis.xtracted.model.*
 import metropolis.xtracted.repository.CRUDLazyRepository
 
-fun editorController(id: Int, repository: CRUDLazyRepository<Country>): EditorController<Country> {
+fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): EditorController<Country> {
     return EditorController(
         id = id,
         title = Message.TITLE,
         locale = ch,
         repository = repository,
-        // diese Attribute von Mountain werden in der DB abgespeichert, dazu muss eine Instanz von Mountain aus den Attributen erzeugt werden
-        //TODO: die abzuspeichernden Werte muss mit der Attribut-Liste übereinstimmen
         asData = { attributes ->
             Country(
                 id = id,
@@ -130,6 +129,104 @@ fun editorController(id: Int, repository: CRUDLazyRepository<Country>): EditorCo
 }
 
 
+
+fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorController<City> {
+    return EditorController(
+        id = id,
+        title = Message.TITLE,
+        locale = ch,
+        repository = repository,
+        asData = { attributes ->
+            City(
+                id = id,
+                name = attributes[Id.CITY_NAME],
+                latitude = attributes[Id.LATITUDE],
+                longitude = attributes[Id.LONGITUDE],
+                countryCode = attributes[Id.COUNTRY_CODE],
+                admin1Code = attributes[Id.ADMIN_1_CODE],
+                population = attributes[Id.CITY_POPULATION],
+                elevation = attributes[Id.ELEVATION],
+                dem = attributes[Id.DEM],
+                timezone = attributes[Id.TIMEZONE]
+            )
+        },
+        asAttributeList = { city ->
+            listOf(
+                (stringAttribute(
+                    id = Id.NAME,
+                    value = city.name,
+                    required = true,
+                    syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+
+                (stringAttribute(
+                    id = Id.COUNTRY_CODE,
+                    value = city.countryCode,
+                    required = true,
+                    syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+
+                (stringAttribute(
+                    id = Id.ADMIN_1_CODE,
+                    value = city.admin1Code,
+                    required = true,
+                    syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+
+                (intAttribute(
+                    id = Id.CITY_POPULATION,
+                    value = city.population,
+                    semanticValidator = {
+                        when {
+                            it == null -> ValidationResult(true, null)
+                            else -> ValidationResult(true, null)
+                        }
+                    })),
+
+                (intAttribute(
+                    id = Id.DEM,
+                    value = city.dem,
+                    semanticValidator = {
+                        when {
+                            it == null -> ValidationResult(true, null)
+                            else -> ValidationResult(true, null)
+                        }
+                    })),
+
+                (intAttribute(
+                    id = Id.ELEVATION,
+                    value = city.elevation,
+                    semanticValidator = {
+                        when {
+                            it == null -> ValidationResult(true, null)
+                            else -> ValidationResult(true, null)
+                        }
+                    })),
+
+                (stringAttribute(
+                    id = Id.TIMEZONE,
+                    value = city.timezone,
+                    required = true,
+                    syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
+
+
+                (doubleAttribute(id                = Id.LATITUDE,
+                    value             = city.latitude,
+                    semanticValidator = { when {
+                        it == null -> ValidationResult(true,  null)
+                        else       -> ValidationResult(true,  null)
+                    }
+                    })),
+
+                (doubleAttribute(id                = Id.LONGITUDE,
+                    value             = city.longitude,
+                    semanticValidator = { when {
+                        it == null -> ValidationResult(true,  null)
+                        else       -> ValidationResult(true,  null)
+                    }
+                    })),
+
+                )
+        })
+}
+
 enum class Id(override val german: String, override val english: String) : AttributeId {
     NAME("Name", "Name"),
     CAPITAL("Hauptstadt", "Capital"),
@@ -143,9 +240,17 @@ enum class Id(override val german: String, override val english: String) : Attri
     AREA_IN_SQKM("Areal in qKM", "Area in SQKM"),
     CURRENCY_CODE("Währungscode", "Currencycode"),
     NEIGHBOURS("Nachbarn", "Neighbours"),
-    FIPS_CODE("Bundesstandard für Informationsverarbeitung", "FIPS Code")
+    FIPS_CODE("Bundesstandard für Informationsverarbeitung", "FIPS Code"),
+    CITY_NAME("Name", "Name"),
+    LATITUDE("Breitengrad", "Latitude"),
+    LONGITUDE("Längengrad", "Longitude"),
+    COUNTRY_CODE("Land Code", "Country code"),
+    ADMIN_1_CODE("Admin 1 Code", "Admin 1 code"),
+    CITY_POPULATION("Population", "Population"),
+    ELEVATION("Höhe", "Elevation"),
+    DEM("DEM", "DEM"),
+    TIMEZONE("Zeitzone", "DEM"),
 }
-
 
 private enum class Message(override val german: String, override val english: String) : Translatable {
     TITLE("Editor", "Editor"),

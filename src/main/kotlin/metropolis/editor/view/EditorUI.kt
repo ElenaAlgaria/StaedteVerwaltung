@@ -20,7 +20,6 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberWindowState
 import metropolis.editor.controller.Id
-import metropolis.metropolis.data.Country
 import metropolis.xtracted.controller.editor.EditorAction
 import metropolis.xtracted.model.Attribute
 import metropolis.xtracted.model.EditorState
@@ -33,7 +32,7 @@ import metropolis.xtracted.view.editor.EditorBar
 import metropolis.xtracted.view.editor.Form
 
 @Composable
-fun ApplicationScope.EditorWindow(state: EditorState<Country>, undoState: UndoState, trigger : (EditorAction) -> Unit) {
+fun <T> ApplicationScope.EditorWindow(state: EditorState<T>, undoState: UndoState, trigger : (EditorAction) -> Unit) {
 
     Window(title          = state.title.translate(state.locale),
         onCloseRequest = ::exitApplication,
@@ -48,7 +47,7 @@ fun ApplicationScope.EditorWindow(state: EditorState<Country>, undoState: UndoSt
 }
 
 @Composable
-fun EditorUi(state: EditorState<Country>, undoState: UndoState, trigger : (EditorAction) -> Unit) {
+fun <T> EditorUi(state: EditorState<T>, undoState: UndoState, trigger : (EditorAction) -> Unit) {
     Column{
         EditorBar(state, undoState, trigger)
 
@@ -65,7 +64,7 @@ fun EditorUi(state: EditorState<Country>, undoState: UndoState, trigger : (Edito
 
 
 @Composable
-private fun Header(state: EditorState<Country>) {
+private fun <T> Header(state: EditorState<T>) {
     // im Editor-State werden die Attribute verwaltet. Diese können generisch als Formular angezeigt werden
     // der Header ist jedoch speziell, nicht generisch (oder noch nicht)
     val name    : Attribute<String>       = state[Id.NAME]

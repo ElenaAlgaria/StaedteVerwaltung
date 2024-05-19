@@ -1,7 +1,8 @@
 package metropolis.editor
 
 import androidx.compose.ui.window.application
-import metropolis.editor.controller.editorController
+import metropolis.editor.controller.cityEditorController
+import metropolis.editor.controller.countryEditorController
 import metropolis.editor.view.EditorWindow
 import metropolis.metropolis.repository.cityRepository
 import metropolis.metropolis.repository.countryRepository
@@ -11,13 +12,15 @@ fun main() {
     val url = "/data/metropolisDB".urlFromResources()
     val countryRepository = countryRepository(url)
     val cityRepository = cityRepository(url)
-    val funId = 4
+    val countryId = 4
+    val cityId = 2960
 
-    val controller = editorController(funId, countryRepository)
+    val countryEditorController = countryEditorController(countryId, countryRepository)
+    val cityEditorController = cityEditorController(cityId, cityRepository)
 
     application {
-        EditorWindow(state     = controller.state,
-            undoState = controller.undoState,
-            trigger   = { controller.triggerAction(it) })
+        EditorWindow(state     = cityEditorController.state,
+            undoState = cityEditorController.undoState,
+            trigger   = { cityEditorController.triggerAction(it) })
     }
 }

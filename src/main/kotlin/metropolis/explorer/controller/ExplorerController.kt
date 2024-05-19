@@ -91,9 +91,9 @@ fun countryController(repository: CRUDLazyRepository<Country>) =
 fun cityController(repository: CRUDLazyRepository<City>) =
     LazyTableController(title       = "Cities of the World",
         repository  = repository,
-        defaultItem = City(id = 0, ELLIPSES, ELLIPSES, ELLIPSES, 0.0, 0.0, ELLIPSES,
-            ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, 0, 0,0,
-            ELLIPSES,  ELLIPSES
+        defaultItem = City(id = 0, ELLIPSES, 0.0, 0.0,  ELLIPSES,
+            ELLIPSES,  0, 0,0,
+            ELLIPSES
         ),
         columns     = listOf(StringColumn(header        = "Name",
             width         = 250.dp,
@@ -152,14 +152,6 @@ fun cityController(repository: CRUDLazyRepository<City>) =
                 dbColumn      = CityColumn.ELEVATION,
                 valueProvider = { it.elevation },
                 formatter     = { it.format("%,d") }
-            ),
-
-            StringColumn(header        = "Modification Date",
-                width         = 80.dp,
-                alignment     = Alignment.Center,
-                fixed         = false,
-                dbColumn      = CityColumn.MODIFICATION_DATE,
-                valueProvider = { it.modificationDate }
             ),
 
         )
