@@ -248,7 +248,7 @@ enum class Id(override val german: String, override val english: String) : Attri
     ADMIN_1_CODE("Admin 1 Code", "Admin 1 code"),
     CITY_POPULATION("Population", "Population"),
     ELEVATION("Höhe", "Elevation"),
-    DEM("DEM", "DEM"),
+    DEM("Digitales Höhenmodell", "DEM"),
     TIMEZONE("Zeitzone", "DEM"),
 }
 

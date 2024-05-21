@@ -102,7 +102,6 @@ fun <T> ExplorerUI(
             trigger = trigger,
             modifier = Modifier.weight(1.0f)
         )
-        println("lol")
     }
 }
 

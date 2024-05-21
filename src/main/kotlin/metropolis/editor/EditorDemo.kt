@@ -12,15 +12,15 @@ fun main() {
     val url = "/data/metropolisDB".urlFromResources()
     val countryRepository = countryRepository(url)
     val cityRepository = cityRepository(url)
-    val countryId = 4
+    val countryId = 380
     val cityId = 2960
 
     val countryEditorController = countryEditorController(countryId, countryRepository)
     val cityEditorController = cityEditorController(cityId, cityRepository)
 
     application {
-        EditorWindow(state     = cityEditorController.state,
-            undoState = cityEditorController.undoState,
-            trigger   = { cityEditorController.triggerAction(it) })
+        EditorWindow(state     = countryEditorController.state,
+            undoState = countryEditorController.undoState,
+            trigger   = { countryEditorController.triggerAction(it) })
     }
 }
