@@ -9,7 +9,6 @@ import metropolis.xtracted.repository.CRUDLazyRepository
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import metropolis.editor.controller.cityEditorController
-import metropolis.xtracted.model.EditorState
 
 class MetropolisController(private val countryRepository: CRUDLazyRepository<Country>,
                            private val cityRepository: CRUDLazyRepository<City>) {
@@ -20,19 +19,20 @@ class MetropolisController(private val countryRepository: CRUDLazyRepository<Cou
         activeCountry = null,
         activeCity = null
     ))
-
+//    override fun executeAction(action: MetropolisAction){
+//
+//    }
     private fun switchToCountryEditor(id: Int) {
         state = state.copy(activeEditorController = createCountryEditorController(id),
         activeCountry             = countryRepository.read(id))
     }
 
-//    private fun switchToCityEditor(id: Int) {
-//        state = state.copy(activeEditorController = createCityEditorController(id),
-//        activeCity             = cityRepository.read(id))
-//    }
+    private fun switchToCityEditor(id: Int) {
+        state = state.copy(activeEditorController = createCityEditorController(id),
+        activeCity             = cityRepository.read(id))
+    }
 
-// onLoggedIn = { switchToWorkReport(it) })
-//
+
     private fun createCountryEditorController(id: Int) =
         countryEditorController(repository       = countryRepository,
             id = id )
@@ -40,5 +40,12 @@ class MetropolisController(private val countryRepository: CRUDLazyRepository<Cou
     private fun createCityEditorController(id: Int) =
         cityEditorController(repository       = cityRepository,
             id = id )
+
+    fun triggerAction(action: MetropolisAction) {
+        when(action){
+            is MetropolisAction.SwitchToCountryEditor -> switchToCountryEditor(action.id)
+            is MetropolisAction.SwitchToCityEditor -> switchToCityEditor(action.id)
+        }
+    }
 }
 

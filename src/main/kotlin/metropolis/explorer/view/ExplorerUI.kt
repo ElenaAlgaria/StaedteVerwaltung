@@ -12,6 +12,7 @@ import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberWindowState
+import metropolis.metropolis.controller.MetropolisAction
 import metropolis.xtracted.model.TableState
 import metropolis.xtracted.controller.lazyloading.LazyTableAction
 import metropolis.xtracted.view.Table
@@ -24,7 +25,7 @@ fun <T> ApplicationScope.ExplorerWindow(
     trigger: (LazyTableAction) -> Unit,
     tabIndex: Int,
     tabChange: (Int) -> Unit,
-    selected: (Int) -> Unit
+    triggerEditor: (Int) -> Unit
 ) {
     Window(
         title = state.title,
@@ -36,7 +37,15 @@ fun <T> ApplicationScope.ExplorerWindow(
         )
     ) {
 
-        TabScreen(state, dataProvider, idProvider, trigger, tabIndex, tabChange)
+        TabScreen(
+            state,
+            dataProvider,
+            idProvider,
+            trigger,
+            tabIndex,
+            tabChange,
+            triggerEditor)
+
     }
 
 }
@@ -48,16 +57,19 @@ fun <T> TabScreen(
     idProvider: (T) -> Int,
     trigger: (LazyTableAction) -> Unit,
     tabIndex: Int,
-    tabChange: (Int) -> Unit
+    tabChange: (Int) -> Unit,
+    triggerEditor: (Int) -> Unit
 ) {
-//    var tabIndex by remember { mutableStateOf(0) }
+
     val tabs = listOf("Countries", "Cities")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex, backgroundColor = Color.White) {
             tabs.forEachIndexed { index, title ->
                 Tab(selected = tabIndex == index,
-                    onClick = { tabChange(index) },
+                    onClick = {
+                        tabChange(index)
+                    },
                     text = {
                         Box {
                             Text(title)
@@ -77,8 +89,8 @@ fun <T> TabScreen(
         }
 
         when (tabIndex) {
-            0 -> ExplorerUI(state, dataProvider, idProvider, trigger)
-            1 -> ExplorerUI(state, dataProvider, idProvider, trigger)
+            0 -> ExplorerUI(state, dataProvider, idProvider, trigger, triggerEditor)
+            1 -> ExplorerUI(state, dataProvider, idProvider, trigger, triggerEditor)
         }
     }
 }
@@ -88,7 +100,8 @@ fun <T> ExplorerUI(
     state: TableState<T>,
     dataProvider: (Int) -> T,
     idProvider: (T) -> Int,
-    trigger: (LazyTableAction) -> Unit
+    trigger: (LazyTableAction) -> Unit,
+    triggerEditor: (Int) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -100,8 +113,8 @@ fun <T> ExplorerUI(
             itemProvider = dataProvider,
             idProvider = idProvider,
             trigger = trigger,
-            modifier = Modifier.weight(1.0f)
-        )
+            modifier = Modifier.weight(1.0f),
+            triggerEditor = triggerEditor)
     }
 }
 

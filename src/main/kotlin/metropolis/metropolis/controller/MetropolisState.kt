@@ -10,7 +10,7 @@ import metropolis.xtracted.repository.Identifiable
 data class MetropolisState<T: Identifiable>(
     val title: String,
     val activeExplorerController: LazyTableController<T>,
-    val activeEditorController: EditorController<T>,
+    val activeEditorController: EditorController<*>,
     val activeCountry: Country?,
     val activeCity: City?
 )

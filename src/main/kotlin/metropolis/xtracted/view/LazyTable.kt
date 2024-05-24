@@ -86,7 +86,8 @@ fun <T> Table(tableState  : TableState<T>,
               itemProvider: (Int) -> T,
               idProvider  : (T) -> Int,
               trigger     : (LazyTableAction) -> Unit,
-              modifier    : Modifier = Modifier){
+              modifier    : Modifier = Modifier,
+              triggerEditor: (Int) -> Unit){
 
     with(tableState){
         Box(modifier = modifier.background(color = tableBackground)
@@ -120,7 +121,8 @@ fun <T> Table(tableState  : TableState<T>,
                                                   .border(color = cellBorderColor, width = Dp.Hairline),
                                state    = lazyListState) {
                         itemsIndexed(items = allIds) { idx, id ->
-                            TableRow(this@with, idx, itemProvider(id), idProvider, trigger, horizontalScrollState)
+                            TableRow(this@with, idx, itemProvider(id), idProvider, trigger, horizontalScrollState
+                            , triggerEditor)
                         }
                     }
                 }
@@ -240,11 +242,13 @@ private fun<T> RowScope.HeaderCell(tableState: TableState<T>, column: TableColum
 
 
 @Composable
-private fun<T> TableRow(tableState: TableState<T>, idx: Int, item: T, idProvider: (T) -> Int, trigger: (LazyTableAction) -> Unit, scrollState: ScrollState){
+private fun<T> TableRow(tableState: TableState<T>, idx: Int, item: T, idProvider: (T) -> Int,
+                        trigger: (LazyTableAction) -> Unit, scrollState: ScrollState, triggerEditor: (Int) -> Unit){
     with(tableState){
         var modifier = Modifier.fillMaxWidth()
                                .height(IntrinsicSize.Max)
-                               .clickable { trigger(LazyTableAction.Select(idProvider(item))) }
+                               .clickable { trigger(LazyTableAction.Select(idProvider(item)))
+                               triggerEditor(idProvider(item))}
 
         if(tableState.selectedId == idProvider(item)){
             modifier = modifier.border(width = 2.dp, color = selectedItemBorder , shape = RoundedCornerShape(6.dp))

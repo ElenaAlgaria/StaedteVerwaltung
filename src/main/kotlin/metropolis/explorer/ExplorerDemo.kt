@@ -20,7 +20,7 @@ fun main() {
     val cityController = cityController(cityRepository)
 
     var tabIndex by mutableStateOf(0)
-    var nameCountry = "null"
+
     application {
         when (tabIndex) {
             0 ->
@@ -33,9 +33,8 @@ fun main() {
                         trigger = { triggerAction(it) },
                         tabIndex = tabIndex,
                         tabChange = {tabIndex = it},
-                        selected = {}
+                        triggerEditor = {}
                     )
-                    println("hää")
                 }
 
             else ->
@@ -48,7 +47,7 @@ fun main() {
                         trigger = { triggerAction(it) },
                         tabIndex = tabIndex,
                         tabChange = {tabIndex = it},
-                        selected = {}
+                        triggerEditor = {}
                     )
                 }
         }
