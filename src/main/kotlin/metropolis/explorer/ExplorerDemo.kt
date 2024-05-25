@@ -2,8 +2,8 @@ package metropolis.explorer
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.application
-import metropolis.explorer.controller.cityController
-import metropolis.explorer.controller.countryController
+import metropolis.explorer.controller.cityExplorerController
+import metropolis.explorer.controller.countryExplorerController
 import metropolis.metropolis.repository.cityRepository
 import metropolis.explorer.view.ExplorerWindow
 import metropolis.metropolis.repository.countryRepository
@@ -16,40 +16,54 @@ fun main() {
     val countryRepository = countryRepository(url)
     val cityRepository = cityRepository(url)
 
-    val countryController = countryController(countryRepository)
-    val cityController = cityController(cityRepository)
+    val countryController = countryExplorerController(countryRepository)
+    val cityController = cityExplorerController(cityRepository)
 
-    var tabIndex by mutableStateOf(0)
+//    val controller = ExplorerController(countryRepository, cityRepository)
+
+//    val tabIndex = remember { mutableStateOf(0)}
 
     application {
-        when (tabIndex) {
-            0 ->
-                with(countryController) {
-                    uiScope = rememberCoroutineScope()
+        with(countryController){
+            uiScope = rememberCoroutineScope()
                     ExplorerWindow(
                         state = state,
-                        dataProvider = { getData(it) },
+                        dataProvider = {getData(it) },
                         idProvider = { it.isoNumeric },
-                        trigger = { triggerAction(it) },
-                        tabIndex = tabIndex,
-                        tabChange = {tabIndex = it},
+                        trigger = {triggerAction(it)},
                         triggerEditor = {}
                     )
-                }
-
-            else ->
-                with(cityController) {
-                    uiScope = rememberCoroutineScope()
-                    ExplorerWindow(
-                        state = state,
-                        dataProvider = { getData(it) },
-                        idProvider = { it.id },
-                        trigger = { triggerAction(it) },
-                        tabIndex = tabIndex,
-                        tabChange = {tabIndex = it},
-                        triggerEditor = {}
-                    )
-                }
         }
-    }
+
+
+//        when (tabIndex.value) {
+//            0 ->
+//                with(countryController) {
+//                    uiScope = rememberCoroutineScope()
+//                    ExplorerWindow(
+//                        state = state,
+//                        dataProvider = { getData(it) },
+//                        idProvider = { it.isoNumeric },
+//                        trigger = { triggerAction(it) },
+//                        tabIndex = tabIndex.value,
+//                        tabChange = {tabIndex.value = it},
+//                        triggerEditor = {}
+//                    )
+//                }
+//            else ->
+//                with(cityController) {
+//                    uiScope = rememberCoroutineScope()
+//                    ExplorerWindow(
+//                        state = state,
+//                        dataProvider = { getData(it) },
+//                        idProvider = { it.id },
+//                        trigger = { triggerAction(it) },
+//                        tabIndex = tabIndex.value,
+//                        tabChange = {tabIndex.value = it},
+//                        triggerEditor = {}
+//                    )
+//                }
+//        }
+
+   }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.ui.focus.FocusRequester
 import metropolis.xtracted.data.Filter
 import metropolis.xtracted.data.SortDirective
+import metropolis.xtracted.repository.Identifiable
 
 data class TableState<T> (val title           : String,
                           val allIds          : List<Int>,
@@ -17,3 +18,6 @@ data class TableState<T> (val title           : String,
                           val focusRequester  : FocusRequester,
                           val triggerRecompose: Boolean
 )
+
+
+

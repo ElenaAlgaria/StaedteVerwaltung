@@ -1,8 +1,6 @@
 package metropolis.metropolis
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.window.application
 import metropolis.metropolis.controller.MetropolisController
 import metropolis.metropolis.repository.cityRepository
@@ -19,18 +17,21 @@ fun main(){
 
     val controller = MetropolisController(countryRepository, cityRepository)
 
-    var tabIndex by mutableStateOf(0)
+//    val tabIndex = remember {mutableStateOf(0)}
     // wenn countryController mach 0, wenn cityController 1
-    when (tabIndex) {
-        0 ->{}
+//    when (tabIndex.value) {
+//        0 ->{}
+//
+//        else -> {}
 
-        else -> {}
+//    }
 
-    }
-    println(controller.state.activeExplorerController.state.title)
     application{
-        MetropolisWindow(controller.state,
-            trigger = {controller.triggerAction(it)})
+        with(controller){
+       state.activeExplorerController.uiScope = rememberCoroutineScope()
+        MetropolisWindow(state,
+            trigger = {triggerAction(it)})
+        }
     }
 
 }

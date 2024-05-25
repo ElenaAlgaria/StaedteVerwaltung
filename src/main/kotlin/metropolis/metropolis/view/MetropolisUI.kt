@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,14 +14,15 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberWindowState
 import metropolis.metropolis.controller.MetropolisState
 import metropolis.editor.view.EditorUi
-import metropolis.explorer.view.TabScreen
+import metropolis.explorer.view.ExplorerUI
+//import metropolis.explorer.view.TabScreen
 import metropolis.metropolis.controller.MetropolisAction
 import metropolis.xtracted.repository.Identifiable
 
 
 @Composable
-fun <T : Identifiable> ApplicationScope.MetropolisWindow(
-    state: MetropolisState<T>, trigger: (MetropolisAction) -> Unit
+fun ApplicationScope.MetropolisWindow(
+    state: MetropolisState, trigger: (MetropolisAction) -> Unit
 ) {
     Window(
         title = state.title, onCloseRequest = ::exitApplication, state = rememberWindowState(
@@ -34,24 +34,40 @@ fun <T : Identifiable> ApplicationScope.MetropolisWindow(
 }
 
 @Composable
-fun <T : Identifiable> MetropolisUi(state: MetropolisState<T>, trigger: (MetropolisAction) -> Unit) {
+fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
     with(state) {
         Row(
             modifier = Modifier.fillMaxSize().padding(20.dp)
         ) {
 
             Card(elevation = 2.dp, modifier = Modifier.weight(1.0f).fillMaxSize()) {
-                TabScreen(state = activeExplorerController.state,
-                    dataProvider = { activeExplorerController.getData(it)},
+                ExplorerUI(
+                    state = activeExplorerController.state,
+                    dataProvider = { activeExplorerController.getData(it) },
                     idProvider = { it.id },
                     trigger = { activeExplorerController.triggerAction(it) },
-                    tabIndex = 0,
-                    tabChange = { 0 == it },
-                    triggerEditor = {if (activeExplorerController.state.title == "Countries of the World")
-                    {trigger(MetropolisAction.SwitchToCountryEditor(it))}
-                    else {trigger(MetropolisAction.SwitchToCityEditor(it))}
-                    })
+                    triggerEditor = {
+                        if (activeExplorerController.state.title == "Countries of the World") {
+                            trigger(MetropolisAction.SwitchToCountryEditor(it))
+                        } else {
+                            trigger(MetropolisAction.SwitchToCityEditor(it))
+                        }
+                    }
+                )
             }
+//                TabScreen(state = activeExplorerController.state,
+//                    dataProvider = { activeExplorerController.getData(it) },
+//                    idProvider = { it.id },
+//                    trigger = { activeExplorerController.triggerAction(it) },
+//                    tabIndex = 0,
+//                    tabChange = { 0 == it },
+//                    triggerEditor = {
+//                        if (activeExplorerController.state.title == "Countries of the World") {
+//                            trigger(MetropolisAction.SwitchToCountryEditor(it))
+//                        } else {
+//                            trigger(MetropolisAction.SwitchToCityEditor(it))
+//                        }
+//                    })
 
             Card(elevation = 2.dp, modifier = Modifier.weight(0.4f).fillMaxSize()) {
                 EditorUi(state = activeEditorController.state,
