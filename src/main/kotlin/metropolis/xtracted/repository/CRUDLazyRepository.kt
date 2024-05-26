@@ -29,6 +29,20 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
             where   = "$idColumn = $id",
             map     = { mapper() })
 
+    fun readFilterCityCountryCode(countryCode: String)  =
+        readFirst(url     = url,
+            table   = table,
+            columns = "$idColumn, " + dataColumns.keys.joinToString(),
+            where   = "$idColumn = $countryCode",
+            map     = { mapper() })
+
+    fun readFilterCityName(name: String)  =
+        readFirst(url     = url,
+            table   = table,
+            columns = "$idColumn, " + dataColumns.keys.joinToString(),
+            where   = "$idColumn = 2960",
+            map     = { mapper() })
+
     fun update(data: T){
         val valueUpdates = StringBuilder()
         dataColumns.entries.forEachIndexed { index, entry ->

@@ -28,7 +28,7 @@ fun main(){
 
     application{
         with(controller){
-       state.activeExplorerController.uiScope = rememberCoroutineScope()
+       state.activeCountryExplorerController.uiScope = rememberCoroutineScope()
         MetropolisWindow(state,
             trigger = {triggerAction(it)})
         }

@@ -17,7 +17,7 @@ import metropolis.editor.view.EditorUi
 import metropolis.explorer.view.ExplorerUI
 //import metropolis.explorer.view.TabScreen
 import metropolis.metropolis.controller.MetropolisAction
-import metropolis.xtracted.repository.Identifiable
+import metropolis.metropolis.data.Country
 
 
 @Composable
@@ -35,26 +35,32 @@ fun ApplicationScope.MetropolisWindow(
 
 @Composable
 fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
+
     with(state) {
         Row(
             modifier = Modifier.fillMaxSize().padding(20.dp)
         ) {
 
             Card(elevation = 2.dp, modifier = Modifier.weight(1.0f).fillMaxSize()) {
+
                 ExplorerUI(
-                    state = activeExplorerController.state,
-                    dataProvider = { activeExplorerController.getData(it) },
+                    state = activeCountryExplorerController.state,
+                    dataProvider = { activeCountryExplorerController.getData(it) },
                     idProvider = { it.id },
-                    trigger = { activeExplorerController.triggerAction(it) },
+                    trigger = {
+                        activeCountryExplorerController.triggerAction(it)
+                    },
                     triggerEditor = {
-                        if (activeExplorerController.state.title == "Countries of the World") {
+                        if (activeCountryExplorerController != null) {
                             trigger(MetropolisAction.SwitchToCountryEditor(it))
+                            trigger(MetropolisAction.SwitchToCityExplorer(it))
                         } else {
                             trigger(MetropolisAction.SwitchToCityEditor(it))
                         }
                     }
                 )
             }
+
 //                TabScreen(state = activeExplorerController.state,
 //                    dataProvider = { activeExplorerController.getData(it) },
 //                    idProvider = { it.id },

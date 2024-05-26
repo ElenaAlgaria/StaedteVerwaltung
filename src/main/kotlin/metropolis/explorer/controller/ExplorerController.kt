@@ -31,7 +31,7 @@ private const val ELLIPSES = "..."
                 dbColumn      = CountryColumn.NAME,
                 valueProvider = { it.name }
             ),
-                StringColumn(header        = "ISO2",
+                StringColumn(header        = "ISO Alpha 2",
                     width         = 80.dp,
                     alignment     = Alignment.Center,
                     fixed         = false,
