@@ -15,6 +15,7 @@ import metropolis.editor.view.EditorUi
 import metropolis.explorer.view.ExplorerUI
 //import metropolis.explorer.view.TabScreen
 import metropolis.metropolis.controller.MetropolisAction
+import metropolis.xtracted.controller.lazyloading.LazyTableAction
 
 
 @Composable
@@ -52,7 +53,9 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
                         triggerEditor = {
                                 trigger(MetropolisAction.SwitchToCountryEditor(it))
                         },
-                        triggerExplorer = {trigger(MetropolisAction.SwitchToCityExplorer(it.capital ?: "No Capital"))}
+                        triggerExplorer = {trigger(MetropolisAction.SwitchToCityExplorer(
+                            it.capital ?: "No Capital",
+                            it.isoAlpha2))}
 
                     )
                 }
