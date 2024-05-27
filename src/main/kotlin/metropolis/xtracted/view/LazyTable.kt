@@ -88,7 +88,8 @@ fun <T> Table(tableState  : TableState<T>,
               idProvider  : (T) -> Int,
               trigger     : (LazyTableAction) -> Unit,
               modifier    : Modifier = Modifier,
-              triggerEditor: (Int) -> Unit){
+              triggerEditor: (Int) -> Unit,
+              triggerExplorer: (T) -> Unit){
 
     with(tableState){
         Box(modifier = modifier.background(color = tableBackground)
@@ -123,7 +124,7 @@ fun <T> Table(tableState  : TableState<T>,
                                state    = lazyListState) {
                         itemsIndexed(items = allIds) { idx, id ->
                             TableRow(this@with, idx, itemProvider(id), idProvider, trigger, horizontalScrollState
-                            , triggerEditor)
+                            , triggerEditor, triggerExplorer)
                         }
                     }
                 }
@@ -245,12 +246,14 @@ private fun<T> RowScope.HeaderCell(tableState: TableState<T>, column: TableColum
 
 @Composable
 private fun<T> TableRow(tableState: TableState<T>, idx: Int, item: T, idProvider: (T) -> Int,
-                        trigger: (LazyTableAction) -> Unit, scrollState: ScrollState, triggerEditor: (Int) -> Unit){
+                        trigger: (LazyTableAction) -> Unit, scrollState: ScrollState, triggerEditor: (Int) -> Unit,
+                        triggerExplorer: (T) -> Unit){
     with(tableState){
         var modifier = Modifier.fillMaxWidth()
                                .height(IntrinsicSize.Max)
                                .clickable { trigger(LazyTableAction.Select(idProvider(item)))
-                               triggerEditor(idProvider(item))}
+                               triggerEditor(idProvider(item))
+                               triggerExplorer(item)}
 
 
         if(tableState.selectedId == idProvider(item)){

@@ -137,14 +137,14 @@ private fun <T : Any> ErrorMessage(attr: Attribute<T>, locale   : Locale) {
 
 @Composable
 private fun Label(attr: Attribute<*>, color: Color, focused : Boolean, locale: Locale) {
-    val labelAreaHeight = 32.dp
+    val labelAreaHeight = 34.dp
     Row(modifier = Modifier.height(labelAreaHeight)
                            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text       = "${attr.id.translate(locale)} ${if(attr.required) "*" else ""}" ,
-             fontSize   = 12.sp,
+             fontSize   = 10.sp,
              color      = color,
-             modifier   = Modifier.align(Alignment.Top).padding(top = 8.dp),
+             modifier   = Modifier.align(Alignment.Top),
              fontWeight = if (focused) FontWeight.Bold else FontWeight.Normal
             )
     }

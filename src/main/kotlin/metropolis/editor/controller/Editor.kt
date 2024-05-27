@@ -6,12 +6,13 @@ import metropolis.xtracted.controller.editor.EditorController
 import metropolis.xtracted.controller.editor.get
 import metropolis.xtracted.model.*
 import metropolis.xtracted.repository.CRUDLazyRepository
+import java.util.*
 
 fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): EditorController<Country> {
     return EditorController(
         id = id,
         title = Message.TITLE,
-        locale = ch,
+        locale = Locale.ENGLISH,
         repository = repository,
         asData = { attributes ->
             Country(
@@ -134,7 +135,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorC
     return EditorController(
         id = id,
         title = Message.TITLE,
-        locale = ch,
+        locale = Locale.ENGLISH,
         repository = repository,
         asData = { attributes ->
             City(

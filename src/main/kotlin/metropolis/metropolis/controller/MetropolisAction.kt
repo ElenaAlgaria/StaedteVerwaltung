@@ -11,5 +11,5 @@ sealed class MetropolisAction(
     class SwitchToCountryEditor(val id: Int)    : MetropolisAction("Country Editor", null, true)
     class SwitchToCityEditor(val id: Int)    : MetropolisAction("City Editor", null, true)
     class SwitchToCountryExplorer(val id: Int)    : MetropolisAction("Country Explorer", null, true)
-    class SwitchToCityExplorer(val id: Int)    : MetropolisAction("City Explorer", null, true)
+    class SwitchToCityExplorer(val nameCity: String)    : MetropolisAction("City Explorer", null, true)
 }

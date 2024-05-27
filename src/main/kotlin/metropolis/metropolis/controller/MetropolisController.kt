@@ -22,7 +22,8 @@ class MetropolisController(private val countryRepository: CRUDLazyRepository<Cou
     var state by mutableStateOf(MetropolisState(title            = "Metropolis",
         activeCountryExplorerController = countryExplorerController(countryRepository),
         activeCityExplorerController = cityExplorerController(cityRepository),
-        activeEditorController = countryEditorController(4,countryRepository),
+        activeCountryEditorController = countryEditorController(4,countryRepository),
+        activeCityEditorController = cityEditorController(2960, cityRepository),
         activeCountry = null,
         activeCity = null
     ))
@@ -32,7 +33,7 @@ class MetropolisController(private val countryRepository: CRUDLazyRepository<Cou
             activeCountry             = countryRepository.read(id))
     }
 
-    private fun switchToCityExplorer(id: Int) {
+    private fun switchToCityExplorer(nameCity: String) {
       // liste mit Integer:
 //       cityRepository.readFilteredIds(filters = listOf(Filter(
 //            column = CityColumn.NAME, op = OP.EQ, values = listOf("Pristina"))),
@@ -43,19 +44,28 @@ class MetropolisController(private val countryRepository: CRUDLazyRepository<Cou
 //            column = CityColumn.COUNTRY_CODE, op = OP.EQ, values = listOf("CH"))),
 //            sortDirective = SortDirective( CityColumn.COUNTRY_CODE,SortDirection.ASC)))
 
-        state = state.copy(activeCityExplorerController = createCityExplorerController(),
-            activeCity             = cityRepository.read(2658649))
+        println(nameCity)
+       val id = cityRepository.readFilteredIds(filters = listOf(
+            Filter(
+            column = CityColumn.NAME, op = OP.EQ, values = listOf("$nameCity"))
+        ),
+            sortDirective = SortDirective( CityColumn.NAME, SortDirection.ASC)
+        )
+        switchToCityEditor(id.first())
 
-        println("und tschüss")
+        state = state.copy(activeCityExplorerController = createCityExplorerController(),
+           activeCity             = cityRepository.read(id.first()))
+
+
     }
 
     private fun switchToCountryEditor(id: Int) {
-        state = state.copy(activeEditorController = createCountryEditorController(id),
+        state = state.copy(activeCountryEditorController = createCountryEditorController(id),
         activeCountry             = countryRepository.read(id))
     }
 
     private fun switchToCityEditor(id: Int) {
-        state = state.copy(activeEditorController = createCityEditorController(id),
+        state = state.copy(activeCityEditorController = createCityEditorController(id),
         activeCity             = cityRepository.read(id))
     }
 
@@ -78,7 +88,7 @@ class MetropolisController(private val countryRepository: CRUDLazyRepository<Cou
             is MetropolisAction.SwitchToCountryEditor -> switchToCountryEditor(action.id)
             is MetropolisAction.SwitchToCityEditor -> switchToCityEditor(action.id)
             is MetropolisAction.SwitchToCountryExplorer -> switchToCountryExplorer(action.id)
-            is MetropolisAction.SwitchToCityExplorer -> switchToCityExplorer(action.id)
+            is MetropolisAction.SwitchToCityExplorer -> switchToCityExplorer(action.nameCity)
         }
     }
 }

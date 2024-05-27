@@ -17,18 +17,10 @@ fun main(){
 
     val controller = MetropolisController(countryRepository, cityRepository)
 
-//    val tabIndex = remember {mutableStateOf(0)}
-    // wenn countryController mach 0, wenn cityController 1
-//    when (tabIndex.value) {
-//        0 ->{}
-//
-//        else -> {}
-
-//    }
-
     application{
         with(controller){
        state.activeCountryExplorerController.uiScope = rememberCoroutineScope()
+       state.activeCityExplorerController.uiScope = rememberCoroutineScope()
         MetropolisWindow(state,
             trigger = {triggerAction(it)})
         }

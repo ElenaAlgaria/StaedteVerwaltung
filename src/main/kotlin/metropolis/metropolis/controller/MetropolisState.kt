@@ -9,7 +9,8 @@ data class MetropolisState(
     val title: String,
     val activeCountryExplorerController: LazyTableController<Country>,
     val activeCityExplorerController: LazyTableController<City>,
-    val activeEditorController: EditorController<*>,
+    val activeCountryEditorController: EditorController<Country>,
+    val activeCityEditorController: EditorController<City>,
     val activeCountry: Country?,
     val activeCity: City?
 )

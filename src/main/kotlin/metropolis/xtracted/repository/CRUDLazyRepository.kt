@@ -39,8 +39,8 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
     fun readFilterCityName(name: String)  =
         readFirst(url     = url,
             table   = table,
-            columns = "$idColumn, " + dataColumns.keys.joinToString(),
-            where   = "$idColumn = 2960",
+            columns = "NAME, " + dataColumns.keys.joinToString(),
+            where   = "NAME = \"$name\"",
             map     = { mapper() })
 
     fun update(data: T){

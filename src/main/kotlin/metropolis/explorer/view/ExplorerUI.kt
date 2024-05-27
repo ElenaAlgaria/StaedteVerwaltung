@@ -22,7 +22,8 @@ fun <T> ApplicationScope.ExplorerWindow(
     dataProvider: (Int) -> T,
     idProvider: (T) -> Int,
     trigger: (LazyTableAction) -> Unit,
-    triggerEditor: (Int) -> Unit
+    triggerEditor: (Int) -> Unit,
+    triggerExplorer: (T) -> Unit
 ) {
     Window(
         title = state.title,
@@ -33,18 +34,7 @@ fun <T> ApplicationScope.ExplorerWindow(
             position = WindowPosition(Alignment.Center)
         )
     ) {
-
-//        TabScreen(
-//            state,
-//            dataProvider,
-//            idProvider,
-//            trigger,
-//            tabIndex,
-//            tabChange,
-//            triggerEditor)
-
-        ExplorerUI(state, dataProvider, idProvider, trigger, triggerEditor)
-
+        ExplorerUI(state, dataProvider, idProvider, trigger, triggerEditor, triggerExplorer)
     }
 
 }
@@ -54,7 +44,8 @@ fun <T> ExplorerUI(
     dataProvider: (Int) -> T,
     idProvider: (T) -> Int,
     trigger: (LazyTableAction) -> Unit,
-    triggerEditor: (Int) -> Unit
+    triggerEditor: (Int) -> Unit,
+    triggerExplorer: (T) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -67,52 +58,7 @@ fun <T> ExplorerUI(
             idProvider = idProvider,
             trigger = trigger,
             modifier = Modifier.weight(1.0f),
-            triggerEditor = triggerEditor)
+            triggerEditor = triggerEditor,
+            triggerExplorer = triggerExplorer)
     }
 }
-
-//@Composable
-//fun <T> TabScreen(
-//    state: TableState<T>,
-//    dataProvider: (Int) -> T,
-//    idProvider: (T) -> Int,
-//    trigger: (LazyTableAction) -> Unit,
-//    tabIndex: Int,
-//    tabChange: (Int) -> Unit,
-//    triggerEditor: (Int) -> Unit
-//) {
-//    val tabIndex = remember { mutableStateOf(0)}
-//    val tabs = listOf("Countries", "Cities")
-//
-//    Column(modifier = Modifier.fillMaxWidth()) {
-//        TabRow(selectedTabIndex = tabIndex, backgroundColor = Color.White) {
-//            tabs.forEachIndexed { index, title ->
-//                Tab(selected = tabIndex == index,
-//                    onClick = {
-//                        tabChange(index)
-//                    },
-//                    text = {
-//                        Box {
-//                            Text(title)
-//                            if (index == 0) {
-//                                Badge(modifier = Modifier.padding(80.dp, 0.dp, 0.dp, 0.dp))
-//                                { Text("200") }
-//                            } else {
-//                                Badge(modifier = Modifier.padding(50.dp, 0.dp, 0.dp, 0.dp))
-//                                { Text("100") }
-//                            }
-//                        }
-//                    }
-//                )
-//            }
-//        }
-//
-//        when (tabIndex) {
-//            0 -> ExplorerUI(state, dataProvider, idProvider, trigger, triggerEditor)
-//            1 -> ExplorerUI(state, dataProvider, idProvider, trigger, triggerEditor)
-//        }
-//    }
-//}
-
-
-

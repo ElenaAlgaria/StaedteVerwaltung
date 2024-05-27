@@ -1,8 +1,6 @@
 package metropolis.metropolis.view
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +15,6 @@ import metropolis.editor.view.EditorUi
 import metropolis.explorer.view.ExplorerUI
 //import metropolis.explorer.view.TabScreen
 import metropolis.metropolis.controller.MetropolisAction
-import metropolis.metropolis.data.Country
 
 
 @Composable
@@ -26,7 +23,7 @@ fun ApplicationScope.MetropolisWindow(
 ) {
     Window(
         title = state.title, onCloseRequest = ::exitApplication, state = rememberWindowState(
-            width = 1200.dp, height = 800.dp, position = WindowPosition(Alignment.Center)
+            width = 1500.dp, height = 800.dp, position = WindowPosition(Alignment.Center)
         )
     ) {
         MetropolisUi(state, trigger)
@@ -40,45 +37,55 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
         Row(
             modifier = Modifier.fillMaxSize().padding(20.dp)
         ) {
+            var name = ""
+            Column (modifier = Modifier.weight(0.5f)) {
 
-            Card(elevation = 2.dp, modifier = Modifier.weight(1.0f).fillMaxSize()) {
+                Card(elevation = 2.dp, modifier = Modifier.weight(0.2f).fillMaxSize()) {
 
-                ExplorerUI(
-                    state = activeCountryExplorerController.state,
-                    dataProvider = { activeCountryExplorerController.getData(it) },
-                    idProvider = { it.id },
-                    trigger = {
-                        activeCountryExplorerController.triggerAction(it)
-                    },
-                    triggerEditor = {
-                        if (activeCountryExplorerController != null) {
-                            trigger(MetropolisAction.SwitchToCountryEditor(it))
-                            trigger(MetropolisAction.SwitchToCityExplorer(it))
-                        } else {
-                            trigger(MetropolisAction.SwitchToCityEditor(it))
-                        }
-                    }
-                )
+                    ExplorerUI(
+                        state = activeCountryExplorerController.state,
+                        dataProvider = { activeCountryExplorerController.getData(it) },
+                        idProvider = { it.id},
+                        trigger = {
+                            activeCountryExplorerController.triggerAction(it)
+                        },
+                        triggerEditor = {
+                                trigger(MetropolisAction.SwitchToCountryEditor(it))
+                        },
+                        triggerExplorer = {trigger(MetropolisAction.SwitchToCityExplorer(it.capital ?: "No Capital"))}
+
+                    )
+                }
+
+                Card(elevation = 2.dp, modifier = Modifier.weight(0.2f).fillMaxSize()) {
+                            println("city")
+                    ExplorerUI(
+                        state = activeCityExplorerController.state,
+                        dataProvider = { activeCityExplorerController.getData(it) },
+                        idProvider = { it.id },
+                        trigger = {
+                            activeCityExplorerController.triggerAction(it)
+                        },
+                        triggerEditor = {
+                           trigger(MetropolisAction.SwitchToCityEditor(it))
+                        },
+                        triggerExplorer = {}
+
+                    )
+                }
+
             }
 
-//                TabScreen(state = activeExplorerController.state,
-//                    dataProvider = { activeExplorerController.getData(it) },
-//                    idProvider = { it.id },
-//                    trigger = { activeExplorerController.triggerAction(it) },
-//                    tabIndex = 0,
-//                    tabChange = { 0 == it },
-//                    triggerEditor = {
-//                        if (activeExplorerController.state.title == "Countries of the World") {
-//                            trigger(MetropolisAction.SwitchToCountryEditor(it))
-//                        } else {
-//                            trigger(MetropolisAction.SwitchToCityEditor(it))
-//                        }
-//                    })
+            Card(elevation = 2.dp, modifier = Modifier.weight(0.2f).fillMaxSize()) {
+                EditorUi(state = activeCountryEditorController.state,
+                    undoState = activeCountryEditorController.undoState,
+                    trigger = { activeCountryEditorController.triggerAction(it) })
+            }
 
-            Card(elevation = 2.dp, modifier = Modifier.weight(0.4f).fillMaxSize()) {
-                EditorUi(state = activeEditorController.state,
-                    undoState = activeEditorController.undoState,
-                    trigger = { activeEditorController.triggerAction(it) })
+            Card(elevation = 2.dp, modifier = Modifier.weight(0.2f).fillMaxSize()) {
+                EditorUi(state = activeCityEditorController.state,
+                    undoState = activeCityEditorController.undoState,
+                    trigger = { activeCityEditorController.triggerAction(it) })
             }
         }
 

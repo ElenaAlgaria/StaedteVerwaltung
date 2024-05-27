@@ -19,10 +19,6 @@ fun main() {
     val countryController = countryExplorerController(countryRepository)
     val cityController = cityExplorerController(cityRepository)
 
-//    val controller = ExplorerController(countryRepository, cityRepository)
-
-//    val tabIndex = remember { mutableStateOf(0)}
-
     application {
         with(countryController){
             uiScope = rememberCoroutineScope()
@@ -31,39 +27,9 @@ fun main() {
                         dataProvider = {getData(it) },
                         idProvider = { it.isoNumeric },
                         trigger = {triggerAction(it)},
-                        triggerEditor = {}
+                        triggerEditor = {},
+                        triggerExplorer = {}
                     )
         }
-
-
-//        when (tabIndex.value) {
-//            0 ->
-//                with(countryController) {
-//                    uiScope = rememberCoroutineScope()
-//                    ExplorerWindow(
-//                        state = state,
-//                        dataProvider = { getData(it) },
-//                        idProvider = { it.isoNumeric },
-//                        trigger = { triggerAction(it) },
-//                        tabIndex = tabIndex.value,
-//                        tabChange = {tabIndex.value = it},
-//                        triggerEditor = {}
-//                    )
-//                }
-//            else ->
-//                with(cityController) {
-//                    uiScope = rememberCoroutineScope()
-//                    ExplorerWindow(
-//                        state = state,
-//                        dataProvider = { getData(it) },
-//                        idProvider = { it.id },
-//                        trigger = { triggerAction(it) },
-//                        tabIndex = tabIndex.value,
-//                        tabChange = {tabIndex.value = it},
-//                        triggerEditor = {}
-//                    )
-//                }
-//        }
-
    }
 }
