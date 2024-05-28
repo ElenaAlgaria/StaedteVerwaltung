@@ -61,7 +61,6 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
                 }
 
                 Card(elevation = 2.dp, modifier = Modifier.weight(0.2f).fillMaxSize()) {
-                            println("city")
                     ExplorerUI(
                         state = activeCityExplorerController.state,
                         dataProvider = { activeCityExplorerController.getData(it) },
@@ -72,7 +71,10 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
                         triggerEditor = {
                            trigger(MetropolisAction.SwitchToCityEditor(it))
                         },
-                        triggerExplorer = {}
+                        triggerExplorer = {
+                            //todo
+                            trigger(MetropolisAction.SwitchToCountryExplorer(it.countryCode))
+                        }
 
                     )
                 }

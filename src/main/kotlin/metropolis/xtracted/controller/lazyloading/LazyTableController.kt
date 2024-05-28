@@ -23,7 +23,7 @@ class LazyTableController<T: Identifiable>(title                  : String,
                                            private val defaultItem: T) :
         ControllerBase<TableState<T>, LazyTableAction>(initialState = TableState(title            = title,
                                                                                  triggerRecompose = false,
-                                                                                 allIds           = repository.readFilteredIds(emptyList(), SortDirective(null)),
+                                                                                 allIds           = repository.readFilteredIds(emptyList(), SortDirective(null), ""),
                                                                                  selectedId       = null,
                                                                                  lazyListState    = LazyListState(),
                                                                                  focusRequester   = FocusRequester(),
@@ -66,7 +66,7 @@ class LazyTableController<T: Identifiable>(title                  : String,
             is LazyTableAction.Select             -> changeSelection(action.id)
             is LazyTableAction.SelectNext         -> selectNext()
             is LazyTableAction.SelectPrevious     -> selectPrevious()
-            is LazyTableAction.SetFilter<*>       -> setFilter(action.column as TableColumn<T, *>, action.filter)
+            is LazyTableAction.SetFilter<*>       -> setFilter(action.column as TableColumn<T, *>, action.filter, action.nameOrder )
             is LazyTableAction.ToggleSortOrder<*> -> toggleSortOrder(action.column as TableColumn<T, *>)
         }
 
@@ -93,12 +93,14 @@ class LazyTableController<T: Identifiable>(title                  : String,
             changeSelection(allIds[nextIdx])
         }
 
-    private fun setFilter(column: TableColumn<T, *>, filter: String) : TableState<T> {
+    private fun setFilter(column: TableColumn<T, *>, filter: String, nameOrder: String) : TableState<T> {
         column.filterAsText = filter
         filterScheduler.scheduleTask {
             if (column.validFilterDescription()) {
                 val allIds = repository.readFilteredIds(filters       = createFilterList(),
-                                                        sortDirective = state.currentSort)
+                                                        sortDirective =
+                                                        state.currentSort,
+                                                        nameOrder)
                 scrollToIdx(0)
                 state = state.copy(allIds        = allIds,
                                    filteredCount = allIds.size)
@@ -127,7 +129,7 @@ class LazyTableController<T: Identifiable>(title                  : String,
         scrollToIdx(0)
 
         return state.copy(currentSort = nextSortDirective,
-                          allIds      = repository.readFilteredIds(createFilterList(), nextSortDirective))
+                          allIds      = repository.readFilteredIds(createFilterList(), nextSortDirective, ""))
 
     }
 

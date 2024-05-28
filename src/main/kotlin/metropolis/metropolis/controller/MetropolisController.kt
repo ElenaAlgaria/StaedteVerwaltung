@@ -11,6 +11,8 @@ import androidx.compose.runtime.setValue
 import metropolis.editor.controller.cityEditorController
 import metropolis.explorer.controller.cityExplorerController
 import metropolis.metropolis.repository.CityColumn
+import metropolis.metropolis.repository.CountryColumn
+import metropolis.xtracted.controller.lazyloading.LazyTableAction
 import metropolis.xtracted.controller.lazyloading.LazyTableAction.SetFilter
 import metropolis.xtracted.data.Filter
 import metropolis.xtracted.data.OP
@@ -35,11 +37,18 @@ class MetropolisController(
         )
     )
 
-    private fun switchToCountryExplorer(id: Int) {
-        state = state.copy(
-            activeCountryExplorerController = createCountryExplorerController(),
-            activeCountry = countryRepository.read(id)
+    private fun switchToCountryExplorer(isoAlpha2: String) {
+        val idList = countryRepository.readFilteredIds(filters = listOf(Filter(column = CountryColumn.ISO_ALPHA2,
+            op = OP.EQ, values = listOf("$isoAlpha2")
         )
+        ),
+            sortDirective = SortDirective(CountryColumn.ISO_ALPHA2, SortDirection.ASC), "")
+        switchToCountryEditor(idList.first())
+
+        state.activeCountryExplorerController.executeAction(
+            SetFilter(state.activeCountryExplorerController.state.columns[1], isoAlpha2, "")
+        )
+
     }
 
     private fun switchToCityExplorer(nameCity: String, countryCode: String) {
@@ -50,20 +59,15 @@ class MetropolisController(
                     column = CityColumn.NAME, op = OP.EQ, values = listOf("$nameCity")
                 )
             ),
-            sortDirective = SortDirective(CityColumn.NAME, SortDirection.ASC)
+            sortDirective = SortDirective(CityColumn.NAME, SortDirection.ASC),
+            ""
         )
         if (idList.isNotEmpty()) {
             switchToCityEditor(idList.first())
         }
 
-// hauptstadt? todo
-//        state.activeCityExplorerController.executeAction(
-//            SetFilter(state.activeCityExplorerController.state.columns[0], nameCity)
-//        )
-
-
         state.activeCityExplorerController.executeAction(
-            SetFilter(state.activeCityExplorerController.state.columns[1], countryCode)
+            SetFilter(state.activeCityExplorerController.state.columns[1], countryCode, nameCity)
         )
 
 
@@ -102,7 +106,7 @@ class MetropolisController(
         when (action) {
             is MetropolisAction.SwitchToCountryEditor -> switchToCountryEditor(action.id)
             is MetropolisAction.SwitchToCityEditor -> switchToCityEditor(action.id)
-            is MetropolisAction.SwitchToCountryExplorer -> switchToCountryExplorer(action.id)
+            is MetropolisAction.SwitchToCountryExplorer -> switchToCountryExplorer(action.isoAlpha2)
             is MetropolisAction.SwitchToCityExplorer -> switchToCityExplorer(action.nameCity, action.countryCode)
         }
     }

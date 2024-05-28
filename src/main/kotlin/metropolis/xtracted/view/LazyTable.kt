@@ -55,7 +55,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import metropolis.explorer.controller.ExplorerState
 import metropolis.xtracted.controller.lazyloading.LazyTableAction
 import metropolis.xtracted.data.SortDirection
 import metropolis.xtracted.data.UNORDERED
@@ -203,6 +202,7 @@ private fun<T> RowScope.HeaderCell(tableState: TableState<T>, column: TableColum
                               .fillMaxHeight()
                               .background(background)){
         Box{
+
             Text(text     = column.header,
                  modifier = Modifier.padding(bottom = 2.dp)
                                     .fillMaxWidth()
@@ -227,7 +227,7 @@ private fun<T> RowScope.HeaderCell(tableState: TableState<T>, column: TableColum
         if(null != column.dbColumn){
             BasicTextField(value         = column.filterAsText,
                            onValueChange = { column.filterAsText = it //workaround: this should be done in Controller
-                                             trigger(LazyTableAction.SetFilter(column, it)) },
+                                             trigger(LazyTableAction.SetFilter(column, it, "")) },
 
                            singleLine    = true,
                            textStyle     = LocalTextStyle.current.copy(textAlign = TextAlign.Center,
@@ -253,11 +253,14 @@ private fun<T> TableRow(tableState: TableState<T>, idx: Int, item: T, idProvider
                                .height(IntrinsicSize.Max)
                                .clickable { trigger(LazyTableAction.Select(idProvider(item)))
                                triggerEditor(idProvider(item))
-                               triggerExplorer(item)}
+                               triggerExplorer(item)
+                               }
+
 
 
         if(tableState.selectedId == idProvider(item)){
             modifier = modifier.border(width = 2.dp, color = selectedItemBorder , shape = RoundedCornerShape(6.dp))
+
         }
 
         Row(modifier = modifier,

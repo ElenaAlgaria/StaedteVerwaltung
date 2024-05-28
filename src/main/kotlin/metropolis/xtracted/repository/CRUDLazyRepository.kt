@@ -14,13 +14,15 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
         insertAndCreateKey(url        = url,
             insertStmt = """INSERT INTO $table DEFAULT VALUES RETURNING $idColumn""".trimMargin())
 
+    // readIds
 
-    fun readFilteredIds(filters: List<Filter<*>>, sortDirective: SortDirective): List<Int> =
+    fun readFilteredIds(filters: List<Filter<*>>, sortDirective: SortDirective, nameOrder: String): List<Int> =
         readIds(url           = url,
                 table         = table,
                 idColumn      = idColumn,
                 filters       = filters,
-                sortDirective = sortDirective)
+                sortDirective = sortDirective,
+                 nameOrder = nameOrder)
 
     fun read(id: Int) : T?  =
         readFirst(url     = url,

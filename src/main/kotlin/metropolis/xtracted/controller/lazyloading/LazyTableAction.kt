@@ -3,6 +3,7 @@ package metropolis.xtracted.controller.lazyloading
 import androidx.compose.ui.graphics.vector.ImageVector
 
 import metropolis.xtracted.controller.Action
+import metropolis.xtracted.data.SortDirective
 import metropolis.xtracted.model.TableColumn
 
 sealed class LazyTableAction(
@@ -12,7 +13,7 @@ sealed class LazyTableAction(
 
     class Select(val id: Int)                                             : LazyTableAction("Select Item")
     class ToggleSortOrder<T>(val column: TableColumn<T, *>)               : LazyTableAction("Change Sort Order")
-    class SetFilter<T>(val column: TableColumn<T, *>, val filter: String) : LazyTableAction("Set Filter")
+    class SetFilter<T>(val column: TableColumn<T, *>, val filter: String, val nameOrder: String) : LazyTableAction("Set Filter")
     object SelectNext                                                     : LazyTableAction("Select Next Item")
     object SelectPrevious                                                 : LazyTableAction("Select Next Item")
 }

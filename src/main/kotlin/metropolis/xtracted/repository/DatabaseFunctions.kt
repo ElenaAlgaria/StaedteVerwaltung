@@ -39,16 +39,15 @@ fun <T> readFirst(url: String, table: String, columns: String = "*", where: Stri
             }
         }
 
-fun readIds(url: String, table: String, idColumn: DbColumn, filters: List<Filter<*>>, sortDirective: SortDirective) : List<Int> =
+fun readIds(url: String, table: String, idColumn: DbColumn, filters: List<Filter<*>>, sortDirective: SortDirective, nameOrder: String) : List<Int> =
     DriverManager.getConnection(url)
         .use {
             val logger: Logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
 
             val orderBy = if(null == sortDirective.column) "" else "ORDER BY  ${sortDirective.column}  ${sortDirective.direction}"
-
-            val sql = "SELECT ${idColumn} FROM $table ${filters.asSql()} $orderBy"
-
-            try {
+            val orderByName = if(nameOrder != "") {"ORDER BY CASE WHEN Name = '$nameOrder' THEN 0 ELSE 1 End" } else {orderBy}
+            val sql = "SELECT ${idColumn} FROM $table ${filters.asSql()} $orderByName"
+                    try {
                 val start = System.currentTimeMillis()
 
                 val resultSet = it.createStatement()
