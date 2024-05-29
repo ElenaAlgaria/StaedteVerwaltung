@@ -28,7 +28,8 @@ fun main() {
                         idProvider = { it.isoNumeric },
                         trigger = {triggerAction(it)},
                         triggerEditor = {},
-                        triggerExplorer = {}
+                        triggerExplorer = {},
+                        triggerCreate = {}
                     )
         }
    }

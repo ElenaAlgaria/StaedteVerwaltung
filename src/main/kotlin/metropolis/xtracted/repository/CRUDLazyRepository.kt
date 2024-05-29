@@ -1,5 +1,6 @@
 package metropolis.xtracted.repository
 
+import metropolis.metropolis.data.City
 import java.sql.ResultSet
 import metropolis.xtracted.data.DbColumn
 import metropolis.xtracted.data.Filter
@@ -10,11 +11,24 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
                                           private val idColumn   : DbColumn,
                                           private val dataColumns: Map<DbColumn, (T) -> String?>,
                                           private val mapper     : ResultSet.() -> T) {
-    fun createKey() : Int =
-        insertAndCreateKey(url        = url,
-            insertStmt = """INSERT INTO $table DEFAULT VALUES RETURNING $idColumn""".trimMargin())
+//    fun createKey(data: T) : Int {
+//        val (fields, values) = dataColumns.entries
+//            .filter { it.key != idColumn }
+//            .map { entry -> entry.key to entry.value(data) }
+//            .unzip()
+//
+//        val fieldsString = fields.joinToString(", ")
+//        val valuesString = values.joinToString(", ")
+//
+//        val insertStmt = """INSERT INTO $table ($fieldsString) VALUES ($valuesString) RETURNING $idColumn""".trimMargin()
+//
+//        return insertAndCreateKey(url = url, insertStmt = insertStmt)
+//    }
+ fun createKey(id: Int) =
+    insertAndCreateKey(url        = url,
+    insertStmt = """INSERT INTO $table ($idColumn) VALUES ($id) RETURNING $idColumn """.trimMargin())
 
-    // readIds
+
 
     fun readFilteredIds(filters: List<Filter<*>>, sortDirective: SortDirective, nameOrder: String): List<Int> =
         readIds(url           = url,
@@ -31,19 +45,7 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
             where   = "$idColumn = $id",
             map     = { mapper() })
 
-    fun readFilterCityCountryCode(countryCode: String)  =
-        readFirst(url     = url,
-            table   = table,
-            columns = "$idColumn, " + dataColumns.keys.joinToString(),
-            where   = "$idColumn = $countryCode",
-            map     = { mapper() })
 
-    fun readFilterCityName(name: String)  =
-        readFirst(url     = url,
-            table   = table,
-            columns = "NAME, " + dataColumns.keys.joinToString(),
-            where   = "NAME = \"$name\"",
-            map     = { mapper() })
 
     fun update(data: T){
         val valueUpdates = StringBuilder()

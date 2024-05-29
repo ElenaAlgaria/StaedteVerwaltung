@@ -12,6 +12,7 @@ import metropolis.editor.controller.cityEditorController
 import metropolis.explorer.controller.cityExplorerController
 import metropolis.metropolis.repository.CityColumn
 import metropolis.metropolis.repository.CountryColumn
+import metropolis.xtracted.controller.editor.EditorAction
 import metropolis.xtracted.controller.lazyloading.LazyTableAction
 import metropolis.xtracted.controller.lazyloading.LazyTableAction.SetFilter
 import metropolis.xtracted.data.Filter
@@ -30,8 +31,8 @@ class MetropolisController(
             title = "Metropolis",
             activeCountryExplorerController = countryExplorerController(countryRepository),
             activeCityExplorerController = cityExplorerController(cityRepository),
-            activeCountryEditorController = countryEditorController(4, countryRepository),
-            activeCityEditorController = cityEditorController(2960, cityRepository),
+            activeCountryEditorController = countryEditorController(4, countryRepository, {}),
+            activeCityEditorController = cityEditorController(2960, cityRepository, {}),
             activeCountry = null,
             activeCity = null
         )
@@ -70,7 +71,6 @@ class MetropolisController(
             SetFilter(state.activeCityExplorerController.state.columns[1], countryCode, nameCity)
         )
 
-
     }
 
     private fun switchToCountryEditor(id: Int) {
@@ -81,25 +81,27 @@ class MetropolisController(
     }
 
     private fun switchToCityEditor(id: Int) {
-        state = state.copy(
+         state = state.copy(
             activeCityEditorController = createCityEditorController(id),
             activeCity = cityRepository.read(id)
         )
+        // if new key then create
+           // cityRepository.createKey(id)
+//            cityRepository.update()
     }
-
-    private fun createCountryExplorerController() =
-        countryExplorerController(repository = countryRepository)
 
     private fun createCountryEditorController(id: Int) =
         countryEditorController(
             repository = countryRepository,
-            id = id
+            id = id,
+            onDeleted = {switchToCountryEditor(0)}
         )
 
     private fun createCityEditorController(id: Int) =
         cityEditorController(
             repository = cityRepository,
-            id = id
+            id = id,
+            onDeleted = {switchToCityEditor(0)}
         )
 
     fun triggerAction(action: MetropolisAction) {

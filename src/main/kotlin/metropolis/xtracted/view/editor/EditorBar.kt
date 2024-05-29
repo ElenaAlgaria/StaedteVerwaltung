@@ -22,7 +22,8 @@ fun EditorBar(state: EditorState<*>, undoState: UndoState, trigger : (EditorActi
             ActionIconStrip(trigger,
                             listOf(
                                 EditorAction.Save(state.changed && state.valid),
-                                   EditorAction.Reload),
+                                   EditorAction.Reload,
+                                    EditorAction.Delete),
 
                             listOf(EditorAction.Undo(undoState.undoAvailable),
                                    EditorAction.Redo(undoState.redoAvailable))

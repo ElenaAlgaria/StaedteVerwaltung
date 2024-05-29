@@ -8,12 +8,14 @@ import metropolis.xtracted.model.*
 import metropolis.xtracted.repository.CRUDLazyRepository
 import java.util.*
 
-fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): EditorController<Country> {
+fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, onDeleted: () -> Unit): EditorController<Country> {
     return EditorController(
         id = id,
         title = "Country Editor",
         locale = Locale.ENGLISH,
         repository = repository,
+        onInit = Country(id = id, name = "", areaSqm = 0.0, continent = "", isoAlpha2 = "", neighbours = "", isoNumeric = 0, population = 0),
+        onDeleted = onDeleted,
         asData = { attributes ->
             Country(
                 id = id,
@@ -131,12 +133,14 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): E
 
 
 
-fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorController<City> {
+fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDeleted: () -> Unit): EditorController<City> {
     return EditorController(
         id = id,
         title = "City Editor",
         locale = Locale.ENGLISH,
         repository = repository,
+        onInit = City(id = id, admin1Code = "", countryCode = "", dem = 0, elevation = 0, longitude = 0.0, latitude = 0.0, name = "", population = 0, timezone = ""),
+        onDeleted = onDeleted,
         asData = { attributes ->
             City(
                 id = id,

@@ -1,5 +1,7 @@
 package metropolis.xtracted.controller.lazyloading
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.ui.graphics.vector.ImageVector
 
 import metropolis.xtracted.controller.Action
@@ -16,4 +18,5 @@ sealed class LazyTableAction(
     class SetFilter<T>(val column: TableColumn<T, *>, val filter: String, val nameOrder: String) : LazyTableAction("Set Filter")
     object SelectNext                                                     : LazyTableAction("Select Next Item")
     object SelectPrevious                                                 : LazyTableAction("Select Next Item")
+    object Create                                                 : LazyTableAction("Create", Icons.Filled.Add)
 }

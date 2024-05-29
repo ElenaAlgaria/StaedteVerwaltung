@@ -27,7 +27,7 @@ fun ApplicationScope.MetropolisWindow(
 ) {
     Window(
         title = state.title, onCloseRequest = ::exitApplication, state = rememberWindowState(
-            width = 1500.dp, height = 800.dp, position = WindowPosition(Alignment.Center)
+            width = 1600.dp, height = 800.dp, position = WindowPosition(Alignment.Center)
         )
     ) {
         MetropolisUi(state, trigger)
@@ -60,9 +60,10 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
                             trigger(
                                 MetropolisAction.SwitchToCityExplorer(
                                     it.capital ?: "No Capital",
-                                    it.isoAlpha2
-                                )
-                            )
+                                    it.isoAlpha2))
+                        },
+                        triggerCreate = {
+                            trigger(MetropolisAction.SwitchToCountryEditor(-999))
                         }
 
                     )
@@ -81,6 +82,9 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
                         },
                         triggerExplorer = {
                             trigger(MetropolisAction.SwitchToCountryExplorer(it.countryCode))
+                        },
+                        triggerCreate = {
+                            trigger(MetropolisAction.SwitchToCityEditor(-999))
                         }
 
                     )

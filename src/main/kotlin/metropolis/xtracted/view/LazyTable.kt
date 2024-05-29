@@ -64,136 +64,177 @@ import metropolis.xtracted.model.TableColumn
 import metropolis.xtracted.model.TableState
 
 
-private val gutterWidth    = 55.dp
+private val gutterWidth = 55.dp
 private val scrollBarWidth = 15.dp
 
 private val tableBackground = Color.Transparent
 
-private val cellBorderColor         = Color.Gray
-private val tableCellBackground     = Color.White
+private val cellBorderColor = Color.Gray
+private val tableCellBackground = Color.White
 private val darkTableCellBackground = Color(250, 250, 250)
 
-private val headerCellBackground     = Color(230, 230, 230)
+private val headerCellBackground = Color(230, 230, 230)
 private val darkHeaderCellBackground = Color(210, 210, 210)
-private val filterCellBackground     = Color(250, 250, 250)
+private val filterCellBackground = Color(250, 250, 250)
 private val darkFilterCellBackground = Color(240, 240, 240)
 
-private val selectedItemBorder       = Color(80, 80, 80)
-
+private val selectedItemBorder = Color(80, 80, 80)
 
 
 @Composable
-fun <T> Table(tableState  : TableState<T>,
-              itemProvider: (Int) -> T,
-              idProvider  : (T) -> Int,
-              trigger     : (LazyTableAction) -> Unit,
-              modifier    : Modifier = Modifier,
-              triggerEditor: (Int) -> Unit,
-              triggerExplorer: (T) -> Unit){
+fun <T> Table(
+    tableState: TableState<T>,
+    itemProvider: (Int) -> T,
+    idProvider: (T) -> Int,
+    trigger: (LazyTableAction) -> Unit,
+    modifier: Modifier = Modifier,
+    triggerEditor: (Int) -> Unit,
+    triggerExplorer: (T) -> Unit,
+    triggerCreate: () -> Unit
+) {
 
-    with(tableState){
+    with(tableState) {
         Box(modifier = modifier.background(color = tableBackground)
-                               .focusRequester(tableState.focusRequester)
-                               .focusable()
-                               .onPreviewKeyEvent {
-                                   if (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) {
-                                       trigger(LazyTableAction.SelectPrevious)
-                                       true
-                                   }
-                                   else if(it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown){
-                                       trigger(LazyTableAction.SelectNext)
-                                       true
-                                   }
-                                   else false
-                               }) {
+            .focusRequester(tableState.focusRequester)
+            .focusable()
+            .onPreviewKeyEvent {
+                if (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) {
+                    trigger(LazyTableAction.SelectPrevious)
+                    true
+                } else if (it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown) {
+                    trigger(LazyTableAction.SelectNext)
+                    true
+                } else false
+            }) {
 
             val horizontalScrollState = rememberScrollState()
 
-            Column(Modifier.align(Alignment.CenterStart)
-                           .padding(end = scrollBarWidth)) {
+            Column(
+                Modifier.align(Alignment.CenterStart)
+                    .padding(end = scrollBarWidth)
+            ) {
 
-                HeaderRow(this@with, horizontalScrollState, trigger)
+                HeaderRow(this@with, horizontalScrollState, trigger, triggerCreate)
 
-                if(filteredCount == 0){
+                if (filteredCount == 0) {
                     NoItemsBox(Modifier.weight(1.0f, true))
-                }
-                else {
-                    LazyColumn(modifier = Modifier.padding(bottom = scrollBarWidth)
-                                                  .weight(1.0f)
-                                                  .border(color = cellBorderColor, width = Dp.Hairline),
-                               state    = lazyListState) {
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.padding(bottom = scrollBarWidth)
+                            .weight(1.0f)
+                            .border(color = cellBorderColor, width = Dp.Hairline),
+                        state = lazyListState
+                    ) {
                         itemsIndexed(items = allIds) { idx, id ->
-                            TableRow(this@with, idx, itemProvider(id), idProvider, trigger, horizontalScrollState
-                            , triggerEditor, triggerExplorer)
+                            TableRow(
+                                this@with,
+                                idx,
+                                itemProvider(id),
+                                idProvider,
+                                trigger,
+                                horizontalScrollState,
+                                triggerEditor,
+                                triggerExplorer
+                            )
                         }
                     }
                 }
             }
 
-            VerticalScrollbar(modifier = Modifier.align(Alignment.CenterEnd)
-                                                 .width(scrollBarWidth)
-                                                 .background(tableBackground)
-                                                 .padding(start = 3.dp, end = 3.dp, top = 60.dp, bottom = scrollBarWidth + 3.dp),
-                              adapter = rememberScrollbarAdapter(scrollState = lazyListState)
-                             )
+            VerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd)
+                    .width(scrollBarWidth)
+                    .background(tableBackground)
+                    .padding(start = 3.dp, end = 3.dp, top = 60.dp, bottom = scrollBarWidth + 3.dp),
+                adapter = rememberScrollbarAdapter(scrollState = lazyListState)
+            )
 
-            val indent = 60.dp.value + columns.filter { it.fixed && it.width != Dp.Unspecified }.sumOf { it.width.value.toDouble()}
-            HorizontalScrollbar(modifier = Modifier.height(scrollBarWidth)
-                                                   .fillMaxWidth()
-                                                   .background(tableBackground)
-                                                   .align(Alignment.BottomCenter)
-                                                   .padding(start = indent.dp, end = scrollBarWidth, bottom = 3.dp, top = 3.dp),
-                                adapter = rememberScrollbarAdapter(horizontalScrollState))
-            Text(text     = "${tableState.title} ",
+            val indent = 60.dp.value + columns.filter { it.fixed && it.width != Dp.Unspecified }
+                .sumOf { it.width.value.toDouble() }
+            HorizontalScrollbar(
+                modifier = Modifier.height(scrollBarWidth)
+                    .fillMaxWidth()
+                    .background(tableBackground)
+                    .align(Alignment.BottomCenter)
+                    .padding(start = indent.dp, end = scrollBarWidth, bottom = 3.dp, top = 3.dp),
+                adapter = rememberScrollbarAdapter(horizontalScrollState)
+            )
+            Text(
+                text = "${tableState.title} ",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.align(Alignment.BottomStart)
             )
-            Text(text     = "filtered count: $filteredCount / total count: $totalCount",
-                 fontSize = 10.sp,
-                 modifier = Modifier.align(Alignment.BottomCenter)
-                )
+            Text(
+                text = "filtered count: $filteredCount / total count: $totalCount",
+                fontSize = 10.sp,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
         }
     }
 }
 
 @Composable
-private fun NoItemsBox(modifier: Modifier){
-    Box(modifier = modifier.padding(bottom = scrollBarWidth)
-                           .fillMaxWidth()
-                           .background(tableCellBackground)
-                           .border(color = cellBorderColor, width = Dp.Hairline),
-        contentAlignment = Alignment.Center){
+private fun NoItemsBox(modifier: Modifier) {
+    Box(
+        modifier = modifier.padding(bottom = scrollBarWidth)
+            .fillMaxWidth()
+            .background(tableCellBackground)
+            .border(color = cellBorderColor, width = Dp.Hairline),
+        contentAlignment = Alignment.Center
+    ) {
         Text("No items found")
     }
 }
 
 
 @Composable
-private fun<T> HeaderRow(tableState: TableState<T>, scrollState: ScrollState, trigger: (LazyTableAction) -> Unit) {
-    with(tableState){
-        Row(Modifier.fillMaxWidth()
-                    .height(IntrinsicSize.Max)){
-            HeaderCell(tableState, StringColumn("", width = gutterWidth, valueProvider = {""}), background = darkHeaderCellBackground, filterBackground = darkFilterCellBackground, trigger = trigger)
+private fun <T> HeaderRow(
+    tableState: TableState<T>,
+    scrollState: ScrollState,
+    trigger: (LazyTableAction) -> Unit,
+    triggerCreate: () -> Unit
+) {
+    with(tableState) {
+        Row(
+            Modifier.fillMaxWidth()
+                .height(IntrinsicSize.Max)
+        ) {
+            HeaderCell(
+                tableState, StringColumn("Create", width = gutterWidth, valueProvider = { "" }),
+                background = darkHeaderCellBackground, filterBackground = darkFilterCellBackground, trigger = trigger,
+                triggerCreate = triggerCreate
+            )
             columns.filter { it.fixed }
                 .forEach {
-                    HeaderCell(tableState       = tableState,
-                               column           = it,
-                               trigger          = trigger,
-                               background       = darkHeaderCellBackground,
-                               filterBackground = darkFilterCellBackground)
+                    HeaderCell(tableState = tableState,
+                        column = it,
+                        trigger = trigger,
+                        background = darkHeaderCellBackground,
+                        filterBackground = darkFilterCellBackground,
+                        triggerCreate = {})
                 }
             Spacer(Modifier.width(2.dp))
-            Row(modifier = Modifier.height(IntrinsicSize.Max)
-                                   .fillMaxWidth()
-                                   .horizontalScroll(scrollState)) {
+            Row(
+                modifier = Modifier.height(IntrinsicSize.Max)
+                    .fillMaxWidth()
+                    .horizontalScroll(scrollState)
+            ) {
                 columns.filter { !it.fixed }
-                    .forEach { HeaderCell(tableState = tableState,
-                                          column     = it,
-                                          trigger    = trigger
-                                         ) }
+                    .forEach {
+                        HeaderCell(tableState = tableState,
+                            column = it,
+                            trigger = trigger,
+                            triggerCreate = {}
+                        )
+                    }
 
-                HeaderCell(tableState, StringColumn(header = "", width  = Dp.Unspecified, valueProvider = { "" }), trigger = trigger)
+                HeaderCell(
+                    tableState,
+                    StringColumn(header = "", width = Dp.Unspecified, valueProvider = { "" }),
+                    trigger = trigger,
+                    triggerCreate = {}
+                )
             }
         }
     }
@@ -201,48 +242,66 @@ private fun<T> HeaderRow(tableState: TableState<T>, scrollState: ScrollState, tr
 
 
 @Composable
-private fun<T> RowScope.HeaderCell(tableState: TableState<T>, column: TableColumn<T, *>, trigger: (LazyTableAction) -> Unit, background: Color = headerCellBackground, filterBackground: Color = filterCellBackground, borderColor: Color = cellBorderColor){
-    val modifier = if(Dp.Unspecified != column.width) Modifier.width(column.width) else Modifier.weight(1f)
-    Column(modifier = modifier.border(color = borderColor, width = Dp.Hairline, shape = RectangleShape)
-                              .fillMaxHeight()
-                              .background(background)){
-        Box{
-
-            Text(text     = column.header,
-                 modifier = Modifier.padding(bottom = 2.dp)
-                                    .fillMaxWidth()
-                                    .align(Alignment.Center)
-                                    .padding(5.dp)
-                                    .clickable(enabled = column.dbColumn != null) { trigger(LazyTableAction.ToggleSortOrder(column)) }
-                                    .handCursor(),
-                 textAlign = TextAlign.Center,
-                 maxLines  = 1,
-                 overflow  = TextOverflow.Ellipsis
-            )
+private fun <T> RowScope.HeaderCell(
+    tableState: TableState<T>, column: TableColumn<T, *>,
+    trigger: (LazyTableAction) -> Unit, background: Color = headerCellBackground,
+    filterBackground: Color = filterCellBackground, borderColor: Color = cellBorderColor,
+    triggerCreate: () -> Unit
+) {
+    val modifier = if (Dp.Unspecified != column.width) Modifier.width(column.width) else Modifier.weight(1f)
+    Column(
+        modifier = modifier.border(color = borderColor, width = Dp.Hairline, shape = RectangleShape)
+            .fillMaxHeight()
+            .background(background)
+    ) {
+        Box {
+            if (column.header == "Create"){
+            ActionIcon({trigger(it); triggerCreate()}, LazyTableAction.Create)
+            }else{
+            Text(text = column.header,
+                modifier = Modifier.padding(bottom = 2.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+                    .padding(5.dp)
+                    .clickable(enabled = column.dbColumn != null) { trigger(LazyTableAction.ToggleSortOrder(column)) }
+                    .handCursor(),
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )}
             if (tableState.currentSort != UNORDERED &&
                 null != column.dbColumn &&
-                tableState.currentSort.column == column.dbColumn) {
-                val icon = if(tableState.currentSort.direction == SortDirection.ASC) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
-                Icon(imageVector        = icon,
-                     contentDescription = "Sort",
-                     modifier           = Modifier.padding(end = 8.dp).size(14.dp).align(Alignment.CenterEnd))
+                tableState.currentSort.column == column.dbColumn
+            ) {
+                val icon =
+                    if (tableState.currentSort.direction == SortDirection.ASC) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "Sort",
+                    modifier = Modifier.padding(end = 8.dp).size(14.dp).align(Alignment.CenterEnd)
+                )
             }
         }
 
-        if(null != column.dbColumn){
-            BasicTextField(value         = column.filterAsText,
-                           onValueChange = { column.filterAsText = it //workaround: this should be done in Controller
-                                             trigger(LazyTableAction.SetFilter(column, it, "")) },
+        if (null != column.dbColumn) {
+            BasicTextField(
+                value = column.filterAsText,
+                onValueChange = {
+                    column.filterAsText = it //workaround: this should be done in Controller
+                    trigger(LazyTableAction.SetFilter(column, it, ""))
+                },
 
-                           singleLine    = true,
-                           textStyle     = LocalTextStyle.current.copy(textAlign = TextAlign.Center,
-                                                                       color     = if(column.validFilterDescription()) Color.Black else Color.Red,
-                                                                       fontSize  = 12.sp,
-                                                                       fontStyle = FontStyle.Italic),
-                           modifier      = modifier.padding(start = 6.dp, end = 6.dp, bottom = 4.dp)
-                                                   .background(filterBackground, RoundedCornerShape(5.dp))
-                                                   .padding(4.dp)
-                                                   .fillMaxWidth()
+                singleLine = true,
+                textStyle = LocalTextStyle.current.copy(
+                    textAlign = TextAlign.Center,
+                    color = if (column.validFilterDescription()) Color.Black else Color.Red,
+                    fontSize = 12.sp,
+                    fontStyle = FontStyle.Italic
+                ),
+                modifier = modifier.padding(start = 6.dp, end = 6.dp, bottom = 4.dp)
+                    .background(filterBackground, RoundedCornerShape(5.dp))
+                    .padding(4.dp)
+                    .fillMaxWidth()
             )
         }
     }
@@ -250,49 +309,62 @@ private fun<T> RowScope.HeaderCell(tableState: TableState<T>, column: TableColum
 
 
 @Composable
-private fun<T> TableRow(tableState: TableState<T>, idx: Int, item: T, idProvider: (T) -> Int,
-                        trigger: (LazyTableAction) -> Unit, scrollState: ScrollState, triggerEditor: (Int) -> Unit,
-                        triggerExplorer: (T) -> Unit){
-    with(tableState){
+private fun <T> TableRow(
+    tableState: TableState<T>, idx: Int, item: T, idProvider: (T) -> Int,
+    trigger: (LazyTableAction) -> Unit, scrollState: ScrollState, triggerEditor: (Int) -> Unit,
+    triggerExplorer: (T) -> Unit
+) {
+    with(tableState) {
         var modifier = Modifier.fillMaxWidth()
-                               .height(IntrinsicSize.Max)
-                               .clickable { trigger(LazyTableAction.Select(idProvider(item)))
-                               triggerEditor(idProvider(item))
-                               triggerExplorer(item)
-                               }
+            .height(IntrinsicSize.Max)
+            .clickable {
+                trigger(LazyTableAction.Select(idProvider(item)))
+                triggerEditor(idProvider(item))
+                triggerExplorer(item)
+            }
 
 
 
-        if(tableState.selectedId == idProvider(item)){
-            modifier = modifier.border(width = 2.dp, color = selectedItemBorder , shape = RoundedCornerShape(6.dp))
+        if (tableState.selectedId == idProvider(item)) {
+            modifier = modifier.border(width = 2.dp, color = selectedItemBorder, shape = RoundedCornerShape(6.dp))
 
         }
 
-        Row(modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically){
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
             GutterCell(text = "$idx")
             columns.filter { it.fixed }
-                .forEach{
-                    TableCell(text          = it.convert(it.valueProvider(item)),
-                              textAlignment = it.alignment,
-                              background    = darkTableCellBackground,
-                              width         = it.width)
+                .forEach {
+                    TableCell(
+                        text = it.convert(it.valueProvider(item)),
+                        textAlignment = it.alignment,
+                        background = darkTableCellBackground,
+                        width = it.width
+                    )
                 }
             Spacer(Modifier.width(2.dp))
-            Row(modifier          = Modifier.height(IntrinsicSize.Max)
-                                            .fillMaxWidth()
-                                            .horizontalScroll(scrollState),
-                verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.height(IntrinsicSize.Max)
+                    .fillMaxWidth()
+                    .horizontalScroll(scrollState),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
                 columns.filter { !it.fixed }
                     .forEach {
-                        TableCell(text          = it.convert(it.valueProvider(item)),
-                                  textAlignment = it.alignment,
-                                  width         = it.width)
+                        TableCell(
+                            text = it.convert(it.valueProvider(item)),
+                            textAlignment = it.alignment,
+                            width = it.width
+                        )
                     }
-                TableCell(text = "",
-                          width = Dp.Unspecified)
+                TableCell(
+                    text = "",
+                    width = Dp.Unspecified
+                )
             }
         }
     }
@@ -300,31 +372,45 @@ private fun<T> TableRow(tableState: TableState<T>, idx: Int, item: T, idProvider
 }
 
 @Composable
-private fun RowScope.GutterCell(text: String){
-    TableCell(textAlignment = Alignment.CenterEnd, text = text, width = gutterWidth, fontSize = 9.sp, background = headerCellBackground)
+private fun RowScope.GutterCell(text: String) {
+    TableCell(
+        textAlignment = Alignment.CenterEnd,
+        text = text,
+        width = gutterWidth,
+        fontSize = 9.sp,
+        background = headerCellBackground
+    )
 }
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun RowScope.TableCell(text: String, textAlignment: Alignment = Alignment.Center, background: Color =  tableCellBackground, borderColor: Color = cellBorderColor, width: Dp, fontSize: TextUnit = TextUnit.Unspecified) {
-    val modifier = if(Dp.Unspecified != width) Modifier.width(width) else Modifier.weight(1f)
-    Box(modifier = modifier.fillMaxHeight()
-                           .background(color = background)
-                           .border(color = borderColor, width = Dp.Hairline, shape = RectangleShape)
-                           .padding(10.dp),
+private fun RowScope.TableCell(
+    text: String,
+    textAlignment: Alignment = Alignment.Center,
+    background: Color = tableCellBackground,
+    borderColor: Color = cellBorderColor,
+    width: Dp,
+    fontSize: TextUnit = TextUnit.Unspecified
+) {
+    val modifier = if (Dp.Unspecified != width) Modifier.width(width) else Modifier.weight(1f)
+    Box(
+        modifier = modifier.fillMaxHeight()
+            .background(color = background)
+            .border(color = borderColor, width = Dp.Hairline, shape = RectangleShape)
+            .padding(10.dp),
         contentAlignment = textAlignment
     ) {
         val clipboard = LocalClipboardManager.current
-        Text(text     = text,
-             maxLines = 1,
-             overflow = TextOverflow.Ellipsis,
-             fontSize = fontSize,
-                                 modifier = Modifier.onPointerEvent(PointerEventType.Press){
-                                     clipboard.setText(AnnotatedString(text))
-                                 }
+        Text(text = text,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            fontSize = fontSize,
+            modifier = Modifier.onPointerEvent(PointerEventType.Press) {
+                clipboard.setText(AnnotatedString(text))
+            }
         )
     }
 }
 
-private fun<T, V> TableColumn<T, V>.convert(value: Any?): String =  formatter(value as V)
+private fun <T, V> TableColumn<T, V>.convert(value: Any?): String = formatter(value as V)

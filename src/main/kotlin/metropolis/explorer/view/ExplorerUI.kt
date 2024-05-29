@@ -23,7 +23,8 @@ fun <T> ApplicationScope.ExplorerWindow(
     idProvider: (T) -> Int,
     trigger: (LazyTableAction) -> Unit,
     triggerEditor: (Int) -> Unit,
-    triggerExplorer: (T) -> Unit
+    triggerExplorer: (T) -> Unit,
+    triggerCreate: () -> Unit
 ) {
     Window(
         title = state.title,
@@ -34,7 +35,7 @@ fun <T> ApplicationScope.ExplorerWindow(
             position = WindowPosition(Alignment.Center)
         )
     ) {
-        ExplorerUI(state, dataProvider, idProvider, trigger, triggerEditor, triggerExplorer)
+        ExplorerUI(state, dataProvider, idProvider, trigger, triggerEditor, triggerExplorer, triggerCreate)
     }
 
 }
@@ -45,7 +46,8 @@ fun <T> ExplorerUI(
     idProvider: (T) -> Int,
     trigger: (LazyTableAction) -> Unit,
     triggerEditor: (Int) -> Unit,
-    triggerExplorer: (T) -> Unit
+    triggerExplorer: (T) -> Unit,
+    triggerCreate: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -59,6 +61,7 @@ fun <T> ExplorerUI(
             trigger = trigger,
             modifier = Modifier.weight(1.0f),
             triggerEditor = triggerEditor,
-            triggerExplorer = triggerExplorer)
+            triggerExplorer = triggerExplorer,
+            triggerCreate = triggerCreate)
     }
 }

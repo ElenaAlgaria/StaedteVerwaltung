@@ -21,10 +21,12 @@ class EditorController<T: Identifiable>(val id              : Int,              
                                         val asAttributeList : (T) -> List<Attribute<*>>,  // die Instanz der data class wird in eine Liste von Attributen gemappt. Damit werden die von der DB gelieferten Daten im Formular editierbar
                                         title               : String,
                                         locale              : Locale,
-                                        testMode: Boolean = false) :
+                                        testMode: Boolean = false,
+                                        onInit: T,
+                                        val onDeleted: () -> Unit) :
         ControllerBase<EditorState<T>, EditorAction>(initialState = EditorState(title      = title,
                                                                                 locale     = locale,
-                                                                                attributes = asAttributeList(repository.read(id)!!)), // der Editor liest initial die Daten von der DB
+                                                                                attributes = asAttributeList(repository.read(id) ?: onInit)), // der Editor liest initial die Daten von der DB
                                                      testMode = testMode) {
 
     private val undoController = UndoController(debounceStart = state)  // jeder Editor unterstützt undo/redo
@@ -39,6 +41,7 @@ class EditorController<T: Identifiable>(val id              : Int,              
 
             is EditorAction.Reload    -> reload()
             is EditorAction.Save      -> save()
+            is EditorAction.Delete -> delete()
 
             is EditorAction.Undo      -> undo()
             is EditorAction.Redo      -> redo()
@@ -60,14 +63,21 @@ class EditorController<T: Identifiable>(val id              : Int,              
         return state.copy(attributes = asAttributeList(repository.read(id)!!))
     }
 
+
+    private fun delete(): EditorState<T>{
+        repository.delete(id)
+        onDeleted()
+        return state.copy(attributes = asAttributeList(repository.read(0)!!))
+    }
+
     private fun save() : EditorState<T> {
         repository.update(asData(state.attributes))
         val updatedAttributes = buildList {
             for(attribute in state.attributes){
                 add(attribute.copy(persistedValue = attribute.value))
             }
-
         }
+
         return state.copy(attributes =  updatedAttributes)
     }
 

@@ -68,7 +68,11 @@ class LazyTableController<T: Identifiable>(title                  : String,
             is LazyTableAction.SelectPrevious     -> selectPrevious()
             is LazyTableAction.SetFilter<*>       -> setFilter(action.column as TableColumn<T, *>, action.filter, action.nameOrder )
             is LazyTableAction.ToggleSortOrder<*> -> toggleSortOrder(action.column as TableColumn<T, *>)
+            is LazyTableAction.Create -> create()
         }
+
+    private fun create() =
+        state.copy(selectedId = null)
 
     private fun changeSelection(id: Int) =
          state.copy(selectedId = id)

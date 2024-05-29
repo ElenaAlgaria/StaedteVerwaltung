@@ -2,12 +2,7 @@ package metropolis.xtracted.view
 
 import java.awt.Cursor
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -64,7 +59,7 @@ fun <A: Action> ActionButton(trigger: (A) -> Unit, action: A){
 
 @Composable
 fun <A: Action> ActionIcon(trigger: (A) -> Unit, action: A){
-    withTooltip(control = { IconButton(modifier = Modifier.cursor(if(action.enabled) Cursor.HAND_CURSOR else Cursor.DEFAULT_CURSOR),
+    withTooltip(control = { IconButton(modifier = Modifier.cursor(if(action.enabled) Cursor.HAND_CURSOR else Cursor.DEFAULT_CURSOR).size(40.dp),
                                        onClick  = { trigger(action) },
                                        enabled  = action.enabled,
                                        content  = { if(action.icon != null) Icon(action.icon!!, action.name) else Text(action.name) }) },
