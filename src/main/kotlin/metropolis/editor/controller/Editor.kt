@@ -11,7 +11,7 @@ import java.util.*
 fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): EditorController<Country> {
     return EditorController(
         id = id,
-        title = Message.TITLE,
+        title = "Country Editor",
         locale = Locale.ENGLISH,
         repository = repository,
         asData = { attributes ->
@@ -134,7 +134,7 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): E
 fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorController<City> {
     return EditorController(
         id = id,
-        title = Message.TITLE,
+        title = "City Editor",
         locale = Locale.ENGLISH,
         repository = repository,
         asData = { attributes ->
@@ -254,6 +254,5 @@ enum class Id(override val german: String, override val english: String) : Attri
 }
 
 private enum class Message(override val german: String, override val english: String) : Translatable {
-    TITLE("Editor", "Editor"),
-    NAME_TOO_LONG("Name zu lang", "name too long"),
+    NAME_TOO_LONG("Name zu lang", "Name too long"),
 }

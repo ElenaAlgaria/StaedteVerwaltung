@@ -1,7 +1,12 @@
 package metropolis.xtracted.view.editor
 
+import androidx.compose.material.Text
 import java.util.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import metropolis.xtracted.controller.editor.EditorAction
 import metropolis.xtracted.model.CH
 import metropolis.xtracted.model.EditorState
@@ -15,7 +20,8 @@ fun EditorBar(state: EditorState<*>, undoState: UndoState, trigger : (EditorActi
     Toolbar {
         AlignLeftRight{
             ActionIconStrip(trigger,
-                            listOf(EditorAction.Save(state.changed && state.valid),
+                            listOf(
+                                EditorAction.Save(state.changed && state.valid),
                                    EditorAction.Reload),
 
                             listOf(EditorAction.Undo(undoState.undoAvailable),

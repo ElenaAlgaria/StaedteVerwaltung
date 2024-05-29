@@ -19,7 +19,7 @@ class EditorController<T: Identifiable>(val id              : Int,              
                                         val repository      : CRUDLazyRepository<T>,
                                         val asData          : (List<Attribute<*>>) -> T,  // die Attribute müssen in eine Instanz der data class umgewandelt werden können. Das wird z.B. für das Speichern benötigt
                                         val asAttributeList : (T) -> List<Attribute<*>>,  // die Instanz der data class wird in eine Liste von Attributen gemappt. Damit werden die von der DB gelieferten Daten im Formular editierbar
-                                        title               : Translatable,
+                                        title               : String,
                                         locale              : Locale,
                                         testMode: Boolean = false) :
         ControllerBase<EditorState<T>, EditorAction>(initialState = EditorState(title      = title,

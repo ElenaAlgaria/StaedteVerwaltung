@@ -49,6 +49,7 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -143,10 +144,14 @@ fun <T> Table(tableState  : TableState<T>,
                                                    .align(Alignment.BottomCenter)
                                                    .padding(start = indent.dp, end = scrollBarWidth, bottom = 3.dp, top = 3.dp),
                                 adapter = rememberScrollbarAdapter(horizontalScrollState))
-
-            Text(text     = "$filteredCount/$totalCount",
-                 fontSize = 9.sp,
-                 modifier = Modifier.align(Alignment.BottomStart)
+            Text(text     = "${tableState.title} ",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.align(Alignment.BottomStart)
+            )
+            Text(text     = "filtered count: $filteredCount / total count: $totalCount",
+                 fontSize = 10.sp,
+                 modifier = Modifier.align(Alignment.BottomCenter)
                 )
         }
     }

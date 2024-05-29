@@ -2,10 +2,13 @@ package metropolis.metropolis.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
@@ -39,23 +42,28 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
             modifier = Modifier.fillMaxSize().padding(20.dp)
         ) {
             var name = ""
-            Column (modifier = Modifier.weight(0.5f)) {
+            Column(modifier = Modifier.weight(0.5f)) {
 
                 Card(elevation = 2.dp, modifier = Modifier.weight(0.2f).fillMaxSize()) {
 
                     ExplorerUI(
                         state = activeCountryExplorerController.state,
                         dataProvider = { activeCountryExplorerController.getData(it) },
-                        idProvider = { it.id},
+                        idProvider = { it.id },
                         trigger = {
                             activeCountryExplorerController.triggerAction(it)
                         },
                         triggerEditor = {
-                                trigger(MetropolisAction.SwitchToCountryEditor(it))
+                            trigger(MetropolisAction.SwitchToCountryEditor(it))
                         },
-                        triggerExplorer = {trigger(MetropolisAction.SwitchToCityExplorer(
-                            it.capital ?: "No Capital",
-                            it.isoAlpha2))}
+                        triggerExplorer = {
+                            trigger(
+                                MetropolisAction.SwitchToCityExplorer(
+                                    it.capital ?: "No Capital",
+                                    it.isoAlpha2
+                                )
+                            )
+                        }
 
                     )
                 }
@@ -69,10 +77,9 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
                             activeCityExplorerController.triggerAction(it)
                         },
                         triggerEditor = {
-                           trigger(MetropolisAction.SwitchToCityEditor(it))
+                            trigger(MetropolisAction.SwitchToCityEditor(it))
                         },
                         triggerExplorer = {
-                            //todo
                             trigger(MetropolisAction.SwitchToCountryExplorer(it.countryCode))
                         }
 

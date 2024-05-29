@@ -14,13 +14,9 @@ import metropolis.xtracted.controller.lazyloading.LazyTableController
 import metropolis.xtracted.view.format
 
 private const val ELLIPSES = "..."
-//class ExplorerController(private val countryRepository: CRUDLazyRepository<Country>,
-//                         private val cityRepository: CRUDLazyRepository<City>){
-
-//var state by mutableStateOf(ExplorerState(countryController(countryRepository), cityController(cityRepository)))
 
     fun countryExplorerController(repository: CRUDLazyRepository<Country>) =
-        LazyTableController(title       = "Countries of the World",
+        LazyTableController(title       = "Countries Explorer",
             repository  = repository,
             defaultItem = Country(0,ELLIPSES, 0, ELLIPSES, ELLIPSES, ELLIPSES, 0.0,
                 0, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES),
@@ -93,7 +89,7 @@ private const val ELLIPSES = "..."
         )
 
     fun cityExplorerController(repository: CRUDLazyRepository<City>) =
-        LazyTableController(title       = "Cities of the World",
+        LazyTableController(title       = "Cities Explorer",
             repository  = repository,
             defaultItem = City(id = 0, ELLIPSES, 0.0, 0.0,  ELLIPSES,
                 ELLIPSES,  0, 0,0,

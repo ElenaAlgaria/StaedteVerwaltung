@@ -34,7 +34,7 @@ import metropolis.xtracted.view.editor.Form
 @Composable
 fun <T> ApplicationScope.EditorWindow(state: EditorState<T>, undoState: UndoState, trigger : (EditorAction) -> Unit) {
 
-    Window(title          = state.title.translate(state.locale),
+    Window(title          = state.title,
         onCloseRequest = ::exitApplication,
         state          = rememberWindowState(width    = 700.dp,
             height   = 900.dp,
@@ -65,16 +65,17 @@ fun <T> EditorUi(state: EditorState<T>, undoState: UndoState, trigger : (EditorA
 
 @Composable
 private fun <T> Header(state: EditorState<T>) {
-    // im Editor-State werden die Attribute verwaltet. Diese können generisch als Formular angezeigt werden
-    // der Header ist jedoch speziell, nicht generisch (oder noch nicht)
     val name    : Attribute<String>       = state[Id.NAME]
 
-
     val huge       = 42.sp
-    val large      = 18.sp
+    val little      = 12.sp
 
     Row(modifier = Modifier.height(IntrinsicSize.Max).padding(10.dp)){
         Column(modifier = Modifier.weight(1.0f)) {
+            Text(text     = "${state.title} ",
+                fontSize = little,
+                fontWeight = FontWeight.Medium,
+            )
             Headline(text = name.value.format("??"), fontSize = huge)
             VSpace(10.dp)
         }
