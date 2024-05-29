@@ -39,27 +39,27 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): E
                     id = Id.NAME,
                     value = country.name,
                     required = true,
-                 syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+                 syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
                     id = Id.CAPITAL,
                     value = country.capital,
                     required = true,
-                    syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+                    syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
                     id = Id.CONTINENT,
                     value = country.continent,
                     required = true,
-                    syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+                    syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (intAttribute(
                     id = Id.POPULATION,
                     value = country.population,
                     semanticValidator = {
-                        when {
-                            it == null -> ValidationResult(true, null)
-                            else -> ValidationResult(true, null)
+                        when{
+                        it == null -> ValidationResult(false, Message.NO_VALUE)
+                         else -> ValidationResult(true, null)
                         }
                     })),
 
@@ -68,7 +68,7 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): E
                     value = country.isoNumeric,
                     semanticValidator = {
                         when {
-                            it == null -> ValidationResult(true, null)
+                            it == null -> ValidationResult(false, Message.NO_VALUE)
                             else -> ValidationResult(true, null)
                         }
                     })),
@@ -107,7 +107,7 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>): E
                 (doubleAttribute(id                = Id.AREA_IN_SQKM,
                     value             = country.areaSqm,
                     semanticValidator = { when {
-                        it == null -> ValidationResult(true,  null)
+                        it == null -> ValidationResult(false, Message.NO_VALUE)
                         else       -> ValidationResult(true,  null)
                     }
                     })),
@@ -157,26 +157,26 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorC
                     id = Id.NAME,
                     value = city.name,
                     required = true,
-                    syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+                    syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
                     id = Id.COUNTRY_CODE,
                     value = city.countryCode,
                     required = true,
-                    syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+                    syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
                     id = Id.ADMIN_1_CODE,
                     value = city.admin1Code,
                     required = true,
-                    syntaxValidator = { (it.length <= 15).asValidationResult(Message.NAME_TOO_LONG) })),
+                    syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (intAttribute(
                     id = Id.CITY_POPULATION,
                     value = city.population,
                     semanticValidator = {
                         when {
-                            it == null -> ValidationResult(true, null)
+                            it == null -> ValidationResult(false, Message.NO_VALUE)
                             else -> ValidationResult(true, null)
                         }
                     })),
@@ -186,7 +186,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorC
                     value = city.dem,
                     semanticValidator = {
                         when {
-                            it == null -> ValidationResult(true, null)
+                            it == null -> ValidationResult(false, Message.NO_VALUE)
                             else -> ValidationResult(true, null)
                         }
                     })),
@@ -196,7 +196,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorC
                     value = city.elevation,
                     semanticValidator = {
                         when {
-                            it == null -> ValidationResult(true, null)
+                            it == null -> ValidationResult(false, Message.NO_VALUE)
                             else -> ValidationResult(true, null)
                         }
                     })),
@@ -211,7 +211,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorC
                 (doubleAttribute(id                = Id.LATITUDE,
                     value             = city.latitude,
                     semanticValidator = { when {
-                        it == null -> ValidationResult(true,  null)
+                        it == null -> ValidationResult(false, Message.NO_VALUE)
                         else       -> ValidationResult(true,  null)
                     }
                     })),
@@ -219,7 +219,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>): EditorC
                 (doubleAttribute(id                = Id.LONGITUDE,
                     value             = city.longitude,
                     semanticValidator = { when {
-                        it == null -> ValidationResult(true,  null)
+                        it == null -> ValidationResult(false, Message.NO_VALUE)
                         else       -> ValidationResult(true,  null)
                     }
                     })),
@@ -255,4 +255,5 @@ enum class Id(override val german: String, override val english: String) : Attri
 
 private enum class Message(override val german: String, override val english: String) : Translatable {
     NAME_TOO_LONG("Name zu lang", "Name too long"),
+    NO_VALUE("Trage einen Wert ein", "Add a Value")
 }
