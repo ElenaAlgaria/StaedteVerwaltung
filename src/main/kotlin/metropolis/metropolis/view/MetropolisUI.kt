@@ -41,7 +41,6 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
         Row(
             modifier = Modifier.fillMaxSize().padding(20.dp)
         ) {
-            var name = ""
             Column(modifier = Modifier.weight(0.5f)) {
 
                 Card(elevation = 2.dp, modifier = Modifier.weight(0.2f).fillMaxSize()) {
@@ -63,7 +62,7 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
                                     it.isoAlpha2))
                         },
                         triggerCreate = {
-                            trigger(MetropolisAction.SwitchToCountryEditor(-999))
+                            trigger(MetropolisAction.SwitchToCountryEditor(-1))
                         }
 
                     )
@@ -84,7 +83,7 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
                             trigger(MetropolisAction.SwitchToCountryExplorer(it.countryCode))
                         },
                         triggerCreate = {
-                            trigger(MetropolisAction.SwitchToCityEditor(-999))
+                            trigger(MetropolisAction.SwitchToCityEditor(-1))
                         }
 
                     )

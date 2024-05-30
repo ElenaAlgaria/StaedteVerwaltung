@@ -197,12 +197,13 @@ fun insertAndCreateKey(url: String, insertStmt: String) : Int =
             }
         }
 
-fun delete(url: String, table: String, id: Int) : Unit =
+fun delete(url: String, table: String, id: Int, idColumn: DbColumn) : Unit =
+
     DriverManager.getConnection(url)
         .use {
             val logger: Logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
 
-            val sql = "DELETE FROM $table WHERE ID = $id"
+            val sql = "DELETE FROM $table WHERE $idColumn = $id"
 
             try {
                 val start = System.currentTimeMillis()

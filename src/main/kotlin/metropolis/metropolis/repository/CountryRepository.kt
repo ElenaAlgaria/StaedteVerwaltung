@@ -16,6 +16,8 @@ import metropolis.metropolis.repository.CountryColumn.CURRENCY_NAME
 import metropolis.metropolis.repository.CountryColumn.PHONE
 import metropolis.metropolis.repository.CountryColumn.LANGUAGES
 import metropolis.metropolis.repository.CountryColumn.NEIGHBOURS
+import metropolis.metropolis.repository.CountryColumn.ISO_ALPHA3
+import metropolis.metropolis.repository.CountryColumn.GEONAME_ID
 import metropolis.xtracted.repository.asSql
 
 enum class CountryColumn : DbColumn {
@@ -31,7 +33,9 @@ enum class CountryColumn : DbColumn {
     CURRENCY_NAME,
     PHONE,
     LANGUAGES,
-    NEIGHBOURS
+    NEIGHBOURS,
+    ISO_ALPHA3,
+    GEONAME_ID
 }
 
 
@@ -55,6 +59,8 @@ fun countryRepository(url: String) =
             PHONE to { it.phone?.asSql() },
             LANGUAGES to { it.languages?.asSql() },
             NEIGHBOURS to { it.neighbours?.asSql() },
+            ISO_ALPHA3 to {it.isoAlpha3.asSql()},
+            GEONAME_ID to {it.geoNameId.toString()}
         ),
         mapper = {
             Country(
@@ -71,7 +77,9 @@ fun countryRepository(url: String) =
                 currencyName = getString("$CURRENCY_NAME"),
                 phone = getString("$PHONE"),
                 languages = getString("$LANGUAGES"),
-                neighbours = getString("$NEIGHBOURS")
+                neighbours = getString("$NEIGHBOURS"),
+                isoAlpha3 = getString("$ISO_ALPHA3"),
+                geoNameId = getInt("$GEONAME_ID")
             )
         }
     )

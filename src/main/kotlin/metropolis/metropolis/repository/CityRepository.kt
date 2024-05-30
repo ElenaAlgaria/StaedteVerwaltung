@@ -13,6 +13,9 @@ import metropolis.metropolis.repository.CityColumn.POPULATION
 import metropolis.metropolis.repository.CityColumn.ELEVATION
 import metropolis.metropolis.repository.CityColumn.DEM
 import metropolis.metropolis.repository.CityColumn.TIMEZONE
+import metropolis.metropolis.repository.CityColumn.MODIFICATION_DATE
+import metropolis.metropolis.repository.CityColumn.FEATURE_CODE
+import metropolis.metropolis.repository.CityColumn.FEATURE_CLASS
 import metropolis.xtracted.repository.asSql
 
 
@@ -26,7 +29,10 @@ enum class CityColumn : DbColumn {
     POPULATION,
     ELEVATION,
     DEM,
-    TIMEZONE
+    TIMEZONE,
+    MODIFICATION_DATE,
+    FEATURE_CODE,
+    FEATURE_CLASS
 }
 
 fun cityRepository(url: String) =
@@ -44,6 +50,10 @@ fun cityRepository(url: String) =
             ELEVATION to { it.elevation?.toString() },
             DEM to { it.dem.toString() },
             TIMEZONE to { it.timezone.asSql() },
+            MODIFICATION_DATE to {it.modificationDate.asSql()},
+            FEATURE_CODE to {it.featureCode.asSql()},
+            FEATURE_CLASS to {it.featureClass.asSql()}
+
         ),
         mapper = {
             City(
@@ -56,7 +66,10 @@ fun cityRepository(url: String) =
                 population = getInt("$POPULATION"),
                 elevation = getInt("$ELEVATION"),
                 dem = getInt("$DEM"),
-                timezone = getString("$TIMEZONE")
+                timezone = getString("$TIMEZONE"),
+                modificationDate = getString("${MODIFICATION_DATE}"),
+                featureCode = getString("${FEATURE_CODE}"),
+                featureClass = getString("${FEATURE_CLASS}")
                 )
         }
     )

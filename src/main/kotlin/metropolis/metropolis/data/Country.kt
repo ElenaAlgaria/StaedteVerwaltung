@@ -5,6 +5,7 @@ import metropolis.xtracted.repository.Identifiable
 data class Country(
     override val id: Int,
     val isoAlpha2: String,
+    val isoAlpha3: String,
     val isoNumeric: Int,
     val fipsCode: String? = null,
     val name: String,
@@ -16,5 +17,6 @@ data class Country(
     val currencyName: String? = null,
     val phone: String? = null,
     val languages: String? = null,
+    val geoNameId: Int,
     val neighbours: String? = null,
 ) : Identifiable

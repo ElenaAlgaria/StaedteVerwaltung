@@ -7,10 +7,11 @@ import metropolis.metropolis.repository.cityRepository
 import metropolis.metropolis.repository.countryRepository
 import metropolis.xtracted.repository.urlFromResources
 import metropolis.metropolis.view.MetropolisWindow
+import metropolis.xtracted.repository.urlFromWorkingDirectory
 
 fun main(){
 
-    val url = "/data/metropolisDB".urlFromResources()
+    val url = "/data/metropolisDB".urlFromWorkingDirectory()
 
     val countryRepository = countryRepository(url)
     val cityRepository = cityRepository(url)

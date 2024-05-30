@@ -8,14 +8,17 @@ import metropolis.xtracted.model.*
 import metropolis.xtracted.repository.CRUDLazyRepository
 import java.util.*
 
-fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, onDeleted: () -> Unit): EditorController<Country> {
+fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, onDeleted: () -> Unit,
+                            onSave: () -> Unit): EditorController<Country> {
     return EditorController(
         id = id,
         title = "Country Editor",
         locale = Locale.ENGLISH,
         repository = repository,
-        onInit = Country(id = id, name = "", areaSqm = 0.0, continent = "", isoAlpha2 = "", neighbours = "", isoNumeric = 0, population = 0),
+        onInit = Country(id = id, name = "", areaSqm = 0.0, continent = "", isoAlpha2 = "", neighbours = "",
+            isoNumeric = 0, population = 0, isoAlpha3 = "", geoNameId = 0),
         onDeleted = onDeleted,
+        onSave = onSave,
         asData = { attributes ->
             Country(
                 id = id,
@@ -31,7 +34,9 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, on
                 areaSqm = attributes[Id.AREA_IN_SQKM],
                 currencyCode = attributes[Id.CURRENCY_CODE],
                 neighbours = attributes[Id.NEIGHBOURS],
-                fipsCode = attributes[Id.FIPS_CODE]
+                fipsCode = attributes[Id.FIPS_CODE],
+                geoNameId = attributes[Id.GEONAME_ID],
+                isoAlpha3 = attributes[Id.ISO_ALPHA3]
 
             )
         },
@@ -68,6 +73,16 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, on
                 (intAttribute(
                     id = Id.ISO_NUMERIC,
                     value = country.isoNumeric,
+                    semanticValidator = {
+                        when {
+                            it == null -> ValidationResult(false, Message.NO_VALUE)
+                            else -> ValidationResult(true, null)
+                        }
+                    })),
+
+                (intAttribute(
+                    id = Id.GEONAME_ID,
+                    value = country.geoNameId,
                     semanticValidator = {
                         when {
                             it == null -> ValidationResult(false, Message.NO_VALUE)
@@ -126,21 +141,27 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, on
                     required = true,
                     syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
 
+                stringAttribute(
+                    id = Id.ISO_ALPHA3,
+                    value = country.isoAlpha3,
+                    required = true,
+                    syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) }))
 
-                )
         })
 }
 
 
 
-fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDeleted: () -> Unit): EditorController<City> {
+fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDeleted: () -> Unit, onSave: () -> Unit): EditorController<City> {
     return EditorController(
         id = id,
         title = "City Editor",
         locale = Locale.ENGLISH,
         repository = repository,
-        onInit = City(id = id, admin1Code = "", countryCode = "", dem = 0, elevation = 0, longitude = 0.0, latitude = 0.0, name = "", population = 0, timezone = ""),
+        onInit = City(id = id, admin1Code = "", countryCode = "", dem = 0, elevation = 0, longitude = 0.0,
+            latitude = 0.0, name = "", population = 0, timezone = "", modificationDate = "", featureClass = "", featureCode = ""),
         onDeleted = onDeleted,
+        onSave = onSave,
         asData = { attributes ->
             City(
                 id = id,
@@ -152,7 +173,10 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
                 population = attributes[Id.CITY_POPULATION],
                 elevation = attributes[Id.ELEVATION],
                 dem = attributes[Id.DEM],
-                timezone = attributes[Id.TIMEZONE]
+                timezone = attributes[Id.TIMEZONE],
+                featureClass = attributes[Id.FEATURE_CLASS],
+                featureCode = attributes[Id.FIPS_CODE],
+                modificationDate = attributes[Id.MODIFICATION_DATE]
             )
         },
         asAttributeList = { city ->
@@ -211,6 +235,12 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
                     required = true,
                     syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
 
+                (stringAttribute(
+                    id = Id.MODIFICATION_DATE,
+                    value = city.modificationDate,
+                    required = true,
+                    syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
+
 
                 (doubleAttribute(id                = Id.LATITUDE,
                     value             = city.latitude,
@@ -227,6 +257,19 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
                         else       -> ValidationResult(true,  null)
                     }
                     })),
+
+                (stringAttribute(
+                    id = Id.FEATURE_CODE,
+                    value = city.featureCode,
+                    required = true,
+                    syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
+
+                (stringAttribute(
+                    id = Id.FEATURE_CLASS,
+                    value = city.featureClass,
+                    required = true,
+                    syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
+
 
                 )
         })
@@ -255,6 +298,12 @@ enum class Id(override val german: String, override val english: String) : Attri
     ELEVATION("Höhe", "Elevation"),
     DEM("Digitales Höhenmodell", "DEM"),
     TIMEZONE("Zeitzone", "DEM"),
+    ISO_ALPHA3("ISO_ALPHA3", "ISO_ALPHA3"),
+    GEONAME_ID("GeoName ID", "GeoName ID"),
+    MODIFICATION_DATE("Modifizierungsdatum", "Modification date"),
+    FEATURE_CODE("Feature Code", "Feature code"),
+    FEATURE_CLASS("Feature Klasse", "Feature Class")
+
 }
 
 private enum class Message(override val german: String, override val english: String) : Translatable {

@@ -256,7 +256,8 @@ private fun <T> RowScope.HeaderCell(
     ) {
         Box {
             if (column.header == "Create"){
-            ActionIcon({trigger(it); triggerCreate()}, LazyTableAction.Create)
+            ActionIcon({trigger(it)
+                triggerCreate()}, LazyTableAction.Create)
             }else{
             Text(text = column.header,
                 modifier = Modifier.padding(bottom = 2.dp)

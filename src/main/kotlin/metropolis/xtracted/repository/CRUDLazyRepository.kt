@@ -11,22 +11,25 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
                                           private val idColumn   : DbColumn,
                                           private val dataColumns: Map<DbColumn, (T) -> String?>,
                                           private val mapper     : ResultSet.() -> T) {
-//    fun createKey(data: T) : Int {
-//        val (fields, values) = dataColumns.entries
-//            .filter { it.key != idColumn }
-//            .map { entry -> entry.key to entry.value(data) }
-//            .unzip()
-//
-//        val fieldsString = fields.joinToString(", ")
-//        val valuesString = values.joinToString(", ")
-//
-//        val insertStmt = """INSERT INTO $table ($fieldsString) VALUES ($valuesString) RETURNING $idColumn""".trimMargin()
-//
-//        return insertAndCreateKey(url = url, insertStmt = insertStmt)
-//    }
- fun createKey(id: Int) =
-    insertAndCreateKey(url        = url,
-    insertStmt = """INSERT INTO $table ($idColumn) VALUES ($id) RETURNING $idColumn """.trimMargin())
+
+ fun createKey(data: T): Int {
+     val columnsCreate = StringBuilder()
+     val valueCreate = StringBuilder()
+     dataColumns.entries.forEachIndexed { index, entry ->
+         if(entry.key != idColumn) {
+             columnsCreate.append(entry.key)
+             valueCreate.append("${entry.value(data)}")
+             if (index < dataColumns.size - 1) {
+                 columnsCreate.append(", ")
+                 valueCreate.append(", ")
+             }
+         }
+         println("$columnsCreate + $valueCreate")
+     }
+     return insertAndCreateKey(url        = url,
+         insertStmt = """INSERT INTO $table ($columnsCreate) VALUES ($valueCreate) RETURNING $idColumn """.trimMargin())
+
+ }
 
 
 
@@ -69,7 +72,8 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
     fun delete(id: Int) =
         delete(url   = url,
             table = table,
-            id    = id)
+            id    = id,
+            idColumn = idColumn)
 
 
     fun totalCount() =

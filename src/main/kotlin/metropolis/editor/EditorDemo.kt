@@ -15,8 +15,8 @@ fun main() {
     val countryId = 380
     val cityId = 2960
 
-    val countryEditorController = countryEditorController(countryId, countryRepository, {})
-    val cityEditorController = cityEditorController(cityId, cityRepository, {})
+    val countryEditorController = countryEditorController(countryId, countryRepository, {}, {})
+    val cityEditorController = cityEditorController(cityId, cityRepository, {}, {})
 
     application {
         EditorWindow(state     = countryEditorController.state,

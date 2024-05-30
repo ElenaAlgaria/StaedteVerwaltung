@@ -18,8 +18,8 @@ private const val ELLIPSES = "..."
     fun countryExplorerController(repository: CRUDLazyRepository<Country>) =
         LazyTableController(title       = "Countries Explorer",
             repository  = repository,
-            defaultItem = Country(0,ELLIPSES, 0, ELLIPSES, ELLIPSES, ELLIPSES, 0.0,
-                0, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES),
+            defaultItem = Country(0,ELLIPSES,"", 0, ELLIPSES, ELLIPSES, ELLIPSES, 0.0,
+                0, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, ELLIPSES, 0,ELLIPSES),
             columns     = listOf(StringColumn(header        = "Name",
                 width         = 250.dp,
                 alignment     = Alignment.CenterStart,
@@ -57,6 +57,15 @@ private const val ELLIPSES = "..."
                     valueProvider = { it.population },
                     formatter     = { it.format("%,d") }
                 ),
+
+                IntColumn(header        = "GeoName ID",
+                    width         = 120.dp,
+                    alignment     = Alignment.CenterEnd,
+                    fixed         = false,
+                    dbColumn      = CountryColumn.GEONAME_ID,
+                    valueProvider = { it.geoNameId },
+                    formatter     = { it.format("%,d") }
+                ),
                 StringColumn(header        = "Continent",
                     width         = 100.dp,
                     alignment     = Alignment.Center,
@@ -84,7 +93,14 @@ private const val ELLIPSES = "..."
                     fixed         = false,
                     dbColumn      = CountryColumn.NEIGHBOURS,
                     valueProvider = { it.neighbours }
-                )
+                ),
+                StringColumn(header        = "ISO Alpha 3",
+                    width         = 80.dp,
+                    alignment     = Alignment.Center,
+                    fixed         = false,
+                    dbColumn      = CountryColumn.ISO_ALPHA3,
+                    valueProvider = { it.isoAlpha3 }
+                ),
             )
         )
 
@@ -92,8 +108,8 @@ private const val ELLIPSES = "..."
         LazyTableController(title       = "Cities Explorer",
             repository  = repository,
             defaultItem = City(id = 0, ELLIPSES, 0.0, 0.0,  ELLIPSES,
-                ELLIPSES,  0, 0,0,
-                ELLIPSES
+                ELLIPSES, ELLIPSES,ELLIPSES, 0, 0,0,
+                ELLIPSES, ELLIPSES
             ),
             columns     = listOf(StringColumn(header        = "Name",
                 width         = 250.dp,
@@ -137,6 +153,27 @@ private const val ELLIPSES = "..."
                     dbColumn      = CityColumn.ADMIN1_CODE,
                     valueProvider = { it.admin1Code }
                 ),
+                StringColumn(header        = "Modification date",
+                    width         = 120.dp,
+                    alignment     = Alignment.CenterEnd,
+                    fixed         = false,
+                    dbColumn      = CityColumn.MODIFICATION_DATE,
+                    valueProvider = { it.modificationDate }
+                ),
+                StringColumn(header        = "Feature code",
+                    width         = 120.dp,
+                    alignment     = Alignment.CenterEnd,
+                    fixed         = false,
+                    dbColumn      = CityColumn.FEATURE_CODE,
+                    valueProvider = { it.featureCode }
+                ),
+                StringColumn(header        = "Feature class",
+                    width         = 120.dp,
+                    alignment     = Alignment.CenterEnd,
+                    fixed         = false,
+                    dbColumn      = CityColumn.FEATURE_CLASS,
+                    valueProvider = { it.featureClass }
+                ),
                 IntColumn(header        = "Population",
                     width         = 120.dp,
                     alignment     = Alignment.CenterEnd,
@@ -157,6 +194,4 @@ private const val ELLIPSES = "..."
                 )
         )
 
-
-//}
 

@@ -8,10 +8,13 @@ data class City (
     val name: String,
     val latitude: Double,
     val longitude: Double,
+    val featureCode: String,
+    val featureClass: String,
     val countryCode: String,
     val admin1Code : String,
     val population : Int,
     val elevation : Int?,
     val dem : Int,
-    val timezone : String
+    val timezone : String,
+    val modificationDate: String
 ) : Identifiable

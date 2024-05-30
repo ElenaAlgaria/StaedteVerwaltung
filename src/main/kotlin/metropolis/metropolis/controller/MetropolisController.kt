@@ -31,25 +31,28 @@ class MetropolisController(
             title = "Metropolis",
             activeCountryExplorerController = countryExplorerController(countryRepository),
             activeCityExplorerController = cityExplorerController(cityRepository),
-            activeCountryEditorController = countryEditorController(4, countryRepository, {}),
-            activeCityEditorController = cityEditorController(2960, cityRepository, {}),
+            activeCountryEditorController = countryEditorController(4, countryRepository, {}, {}),
+            activeCityEditorController = cityEditorController(2960, cityRepository, {}, {}),
             activeCountry = null,
             activeCity = null
         )
     )
 
     private fun switchToCountryExplorer(isoAlpha2: String) {
-        val idList = countryRepository.readFilteredIds(filters = listOf(Filter(column = CountryColumn.ISO_ALPHA2,
-            op = OP.EQ, values = listOf("$isoAlpha2")
+        val idList = countryRepository.readFilteredIds(
+            filters = listOf(
+                Filter(
+                    column = CountryColumn.ISO_ALPHA2,
+                    op = OP.EQ, values = listOf("$isoAlpha2")
+                )
+            ),
+            sortDirective = SortDirective(CountryColumn.ISO_ALPHA2, SortDirection.ASC), ""
         )
-        ),
-            sortDirective = SortDirective(CountryColumn.ISO_ALPHA2, SortDirection.ASC), "")
         switchToCountryEditor(idList.first())
 
         state.activeCountryExplorerController.executeAction(
             SetFilter(state.activeCountryExplorerController.state.columns[1], isoAlpha2, "")
         )
-
     }
 
     private fun switchToCityExplorer(nameCity: String, countryCode: String) {
@@ -74,34 +77,59 @@ class MetropolisController(
     }
 
     private fun switchToCountryEditor(id: Int) {
-        state = state.copy(
-            activeCountryEditorController = createCountryEditorController(id),
-            activeCountry = countryRepository.read(id)
-        )
+        if (id < 0) {
+            val data = Country(
+                id, isoNumeric = id, isoAlpha3 = "", isoAlpha2 = "",
+                name = "", areaSqm = 0.0, population = 0, currencyCode = "", continent = "", geoNameId = 0,
+            )
+            val key = countryRepository.createKey(data)
+            state = state.copy(
+                activeCountryEditorController = createCountryEditorController(key),
+                activeCountry = countryRepository.read(key)
+            )
+        } else {
+            state = state.copy(
+                activeCountryEditorController = createCountryEditorController(id),
+                activeCountry = countryRepository.read(id)
+            )
+        }
     }
 
     private fun switchToCityEditor(id: Int) {
-         state = state.copy(
-            activeCityEditorController = createCityEditorController(id),
-            activeCity = cityRepository.read(id)
-        )
-        // if new key then create
-           // cityRepository.createKey(id)
-//            cityRepository.update()
+        if (id < 0) {
+            val data = City(
+                id, name = "", latitude = 0.0, longitude = 0.0,
+                featureCode = "", featureClass = "", countryCode = "", admin1Code = "", population = 0, elevation = 0,
+                dem = 0, timezone = "", modificationDate = "")
+            val key = cityRepository.createKey(data)
+            state = state.copy(
+                activeCityEditorController = createCityEditorController(key),
+                activeCity = cityRepository.read(key)
+            )
+        } else {
+            state = state.copy(
+                activeCityEditorController = createCityEditorController(id),
+                activeCity = cityRepository.read(id)
+            )
+        }
     }
 
     private fun createCountryEditorController(id: Int) =
         countryEditorController(
             repository = countryRepository,
             id = id,
-            onDeleted = {switchToCountryEditor(0)}
+            onDeleted = { switchToCountryEditor(4)
+                        state.activeCountryExplorerController.state.triggerRecompose},
+            onSave = {}
         )
 
     private fun createCityEditorController(id: Int) =
         cityEditorController(
             repository = cityRepository,
             id = id,
-            onDeleted = {switchToCityEditor(0)}
+            onDeleted = { switchToCityEditor(2960)
+                        state.activeCityExplorerController.state.copy()},
+            onSave = {}
         )
 
     fun triggerAction(action: MetropolisAction) {

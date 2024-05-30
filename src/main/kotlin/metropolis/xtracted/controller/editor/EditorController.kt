@@ -23,7 +23,8 @@ class EditorController<T: Identifiable>(val id              : Int,              
                                         locale              : Locale,
                                         testMode: Boolean = false,
                                         onInit: T,
-                                        val onDeleted: () -> Unit) :
+                                        val onDeleted: () -> Unit,
+                                        val onSave: () -> Unit) :
         ControllerBase<EditorState<T>, EditorAction>(initialState = EditorState(title      = title,
                                                                                 locale     = locale,
                                                                                 attributes = asAttributeList(repository.read(id) ?: onInit)), // der Editor liest initial die Daten von der DB
@@ -67,7 +68,7 @@ class EditorController<T: Identifiable>(val id              : Int,              
     private fun delete(): EditorState<T>{
         repository.delete(id)
         onDeleted()
-        return state.copy(attributes = asAttributeList(repository.read(0)!!))
+        return state.copy(attributes = asAttributeList(repository.read(2960)!!))
     }
 
     private fun save() : EditorState<T> {
@@ -77,7 +78,8 @@ class EditorController<T: Identifiable>(val id              : Int,              
                 add(attribute.copy(persistedValue = attribute.value))
             }
         }
-
+            onSave()
+        println(updatedAttributes)
         return state.copy(attributes =  updatedAttributes)
     }
 
