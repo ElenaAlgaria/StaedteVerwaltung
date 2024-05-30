@@ -17,24 +17,28 @@ import metropolis.xtracted.repository.Identifiable
 import metropolis.xtracted.repository.CRUDLazyRepository
 
 
-class LazyTableController<T: Identifiable>(title                  : String,
-                                           private val repository : CRUDLazyRepository<T>,
-                                           columns                : List<TableColumn<T, *>>,
-                                           private val defaultItem: T) :
-        ControllerBase<TableState<T>, LazyTableAction>(initialState = TableState(title            = title,
-                                                                                 triggerRecompose = false,
-                                                                                 allIds           = repository.readFilteredIds(emptyList(), SortDirective(null), ""),
-                                                                                 selectedId       = null,
-                                                                                 lazyListState    = LazyListState(),
-                                                                                 focusRequester   = FocusRequester(),
-                                                                                 currentFilters   = emptyList(),
-                                                                                 currentSort      = UNORDERED,
-                                                                                 filteredCount    = repository.filteredCount(emptyList()),
-                                                                                 totalCount       = repository.totalCount(),
-                                                                                 columns          = columns
-                                                                                )
-                                                         ) {
-            lateinit var uiScope: CoroutineScope
+class LazyTableController<T : Identifiable>(
+    title: String,
+    private val repository: CRUDLazyRepository<T>,
+    columns: List<TableColumn<T, *>>,
+    private val defaultItem: T
+) :
+    ControllerBase<TableState<T>, LazyTableAction>(
+        initialState = TableState(
+            title = title,
+            triggerRecompose = false,
+            allIds = repository.readFilteredIds(emptyList(), SortDirective(null), ""),
+            selectedId = null,
+            lazyListState = LazyListState(),
+            focusRequester = FocusRequester(),
+            currentFilters = emptyList(),
+            currentSort = UNORDERED,
+            filteredCount = repository.filteredCount(emptyList()),
+            totalCount = repository.totalCount(),
+            columns = columns
+        )
+    ) {
+    lateinit var uiScope: CoroutineScope
 
     // filtern erst nach einer gewissen 'Ruhezeit'
     private val filterScheduler = Scheduler(200)
@@ -61,23 +65,36 @@ class LazyTableController<T: Identifiable>(title                  : String,
         }
 
 
-    override fun executeAction(action: LazyTableAction) : TableState<T> =
+    override fun executeAction(action: LazyTableAction): TableState<T> =
         when (action) {
-            is LazyTableAction.Select             -> changeSelection(action.id)
-            is LazyTableAction.SelectNext         -> selectNext()
-            is LazyTableAction.SelectPrevious     -> selectPrevious()
-            is LazyTableAction.SetFilter<*>       -> setFilter(action.column as TableColumn<T, *>, action.filter, action.nameOrder )
+            is LazyTableAction.Select -> changeSelection(action.id)
+            is LazyTableAction.SelectNext -> selectNext()
+            is LazyTableAction.SelectPrevious -> selectPrevious()
+            is LazyTableAction.SetFilter<*> -> setFilter(
+                action.column as TableColumn<T, *>,
+                action.filter,
+                action.nameOrder
+            )
+
             is LazyTableAction.ToggleSortOrder<*> -> toggleSortOrder(action.column as TableColumn<T, *>)
             is LazyTableAction.Create -> create()
+            is LazyTableAction.Reload -> reloadTable(action.reloadId)
         }
 
     private fun create() =
         state.copy(selectedId = null)
 
-    private fun changeSelection(id: Int) =
-         state.copy(selectedId = id)
+    private fun reloadTable(reloadId: Int?): TableState<T> {
+        if (reloadId != null) {
+            cache.remove(key = reloadId)
+        }
+        return setFilter(state.columns[0], filter = state.columns[0].filterAsText, "")
+    }
 
-    private  fun selectNext() =
+    private fun changeSelection(id: Int) =
+        state.copy(selectedId = id)
+
+    private fun selectNext() =
         with(state) {
             focusRequester.requestFocus()
             val nextIdx = (allIds.indexOf(selectedId ?: -1) + 1).coerceAtMost(filteredCount - 1)
@@ -97,19 +114,24 @@ class LazyTableController<T: Identifiable>(title                  : String,
             changeSelection(allIds[nextIdx])
         }
 
-    private fun setFilter(column: TableColumn<T, *>, filter: String, nameOrder: String) : TableState<T> {
+    private fun setFilter(column: TableColumn<T, *>, filter: String, nameOrder: String): TableState<T> {
         column.filterAsText = filter
         filterScheduler.scheduleTask {
             if (column.validFilterDescription()) {
-                val allIds = repository.readFilteredIds(filters       = createFilterList(),
-                                                        sortDirective =
-                                                        state.currentSort,
-                                                        nameOrder)
+                val allIds = repository.readFilteredIds(
+                    filters = createFilterList(),
+                    sortDirective =
+                    state.currentSort,
+                    nameOrder
+                )
                 scrollToIdx(0)
-                state = state.copy(allIds        = allIds,
-                                   filteredCount = allIds.size)
+                state = state.copy(
+                    allIds = allIds,
+                    filteredCount = allIds.size
+                )
             }
         }
+        println("Filter")
         return state
     }
 
@@ -117,23 +139,29 @@ class LazyTableController<T: Identifiable>(title                  : String,
         val currentSortDirective = state.currentSort
         val nextSortDirective =
             when {
-                null == column.dbColumn                        -> UNORDERED
+                null == column.dbColumn -> UNORDERED
 
                 currentSortDirective.column == column.dbColumn -> if (currentSortDirective.direction == SortDirection.ASC) {
-                                                                    SortDirective(currentSortDirective.column, SortDirection.DESC)
-                                                                  } else {
-                                                                      UNORDERED
-                                                                  }
-                UNORDERED == currentSortDirective ||
-                currentSortDirective.column != column.dbColumn -> SortDirective(column.dbColumn, SortDirection.ASC)
+                    SortDirective(currentSortDirective.column, SortDirection.DESC)
+                } else {
+                    UNORDERED
+                }
 
-                else                                           -> UNORDERED
+                UNORDERED == currentSortDirective ||
+                        currentSortDirective.column != column.dbColumn -> SortDirective(
+                    column.dbColumn,
+                    SortDirection.ASC
+                )
+
+                else -> UNORDERED
             }
 
         scrollToIdx(0)
-
-        return state.copy(currentSort = nextSortDirective,
-                          allIds      = repository.readFilteredIds(createFilterList(), nextSortDirective, ""))
+        println("Sort")
+        return state.copy(
+            currentSort = nextSortDirective,
+            allIds = repository.readFilteredIds(createFilterList(), nextSortDirective, "")
+        )
 
     }
 
@@ -153,11 +181,11 @@ class LazyTableController<T: Identifiable>(title                  : String,
             state.lazyListState.scrollToItem(idx, 0)
         }
 
-    private fun isVisible(id: Int) : Boolean =
-        with(state){
+    private fun isVisible(id: Int): Boolean =
+        with(state) {
             val idx = allIds.indexOf(id)
             idx >= lazyListState.firstVisibleItemIndex &&
-            idx < lazyListState.firstVisibleItemIndex + lazyListState.layoutInfo.visibleItemsInfo.size
+                    idx < lazyListState.firstVisibleItemIndex + lazyListState.layoutInfo.visibleItemsInfo.size
         }
 
     private fun recompose() {

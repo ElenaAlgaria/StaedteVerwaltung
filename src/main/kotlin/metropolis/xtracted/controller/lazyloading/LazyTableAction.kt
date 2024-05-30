@@ -19,4 +19,5 @@ sealed class LazyTableAction(
     object SelectNext                                                     : LazyTableAction("Select Next Item")
     object SelectPrevious                                                 : LazyTableAction("Select Next Item")
     object Create                                                 : LazyTableAction("Create", Icons.Filled.Add)
+    class Reload(val reloadId: Int?)                                                 : LazyTableAction("Reload")
 }

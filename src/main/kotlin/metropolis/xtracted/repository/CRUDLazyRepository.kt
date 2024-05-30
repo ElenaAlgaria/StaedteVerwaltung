@@ -24,14 +24,11 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
                  valueCreate.append(", ")
              }
          }
-         println("$columnsCreate + $valueCreate")
      }
      return insertAndCreateKey(url        = url,
          insertStmt = """INSERT INTO $table ($columnsCreate) VALUES ($valueCreate) RETURNING $idColumn """.trimMargin())
 
  }
-
-
 
     fun readFilteredIds(filters: List<Filter<*>>, sortDirective: SortDirective, nameOrder: String): List<Int> =
         readIds(url           = url,
@@ -47,7 +44,6 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
             columns = "$idColumn, " + dataColumns.keys.joinToString(),
             where   = "$idColumn = $id",
             map     = { mapper() })
-
 
 
     fun update(data: T){
@@ -86,6 +82,5 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
               table    = table,
               idColumn = idColumn,
               filters  = filters)
-
 
 }

@@ -79,7 +79,8 @@ class EditorController<T: Identifiable>(val id              : Int,              
             }
         }
             onSave()
-        println(updatedAttributes)
+        println("hfhfhfhh")
+
         return state.copy(attributes =  updatedAttributes)
     }
 
