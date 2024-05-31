@@ -4,11 +4,6 @@ import metropolis.xtracted.controller.ControllerBase
 import metropolis.xtracted.controller.Scheduler
 import metropolis.xtracted.model.UndoState
 
-/*
-UndoController provides a generic way to manage the application state to get undo/redo functionality.
-
-It is applicable to any application state S. Therefore, it needs to be generic.
- */
 class UndoController<S>(private var debounceStart: S, delay : Long = 200L)
     : ControllerBase<UndoState, UndoAction>(initialState = UndoState(undoAvailable = false,
                                                                      redoAvailable = false)) {
@@ -16,8 +11,6 @@ class UndoController<S>(private var debounceStart: S, delay : Long = 200L)
     private val undoStack = ArrayDeque<Snapshot<S>>()
     private val redoStack = ArrayDeque<Snapshot<S>>()
 
-    //we need a scheduler to slow down the undoStack updates
-    //otherwise we would have a new entry for every single action and not for a "bulk-undo"
     private val undoStackScheduler = Scheduler(delay)
 
     override fun executeAction(action: UndoAction) : UndoState =
@@ -28,12 +21,9 @@ class UndoController<S>(private var debounceStart: S, delay : Long = 200L)
             is UndoAction.Reset              -> reset()
         }
 
-    /**
-     *  to enable a "bulk-undo" we have to wait until there is no new action triggered
-     */
     private fun schedulePushOnUndoStack(newState: S): UndoState {
         undoStackScheduler.scheduleTask {
-            // this will be executed if no new action is triggered within 200ms
+
             undoStack.push(Snapshot(debounceStart, newState))
             redoStack.clear()
 
@@ -78,8 +68,5 @@ class UndoController<S>(private var debounceStart: S, delay : Long = 200L)
 }
 
 
-/*
-Needed to store the application state you need for undo and redo.
- */
 private data class Snapshot<S>(val beforeAction: S,
                                val afterAction:  S)

@@ -288,7 +288,7 @@ private fun <T> RowScope.HeaderCell(
             BasicTextField(
                 value = column.filterAsText,
                 onValueChange = {
-                    column.filterAsText = it //workaround: this should be done in Controller
+                    column.filterAsText = it
                     trigger(LazyTableAction.SetFilter(column, it, ""))
                 },
 

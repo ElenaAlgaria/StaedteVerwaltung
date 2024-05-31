@@ -194,8 +194,8 @@ private val tooltipBackground = Color(255, 255, 210)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun withTooltip(control : @Composable () -> Unit, tooltip : @Composable () -> Unit){
-    // see: https://github.com/JetBrains/compose-multiplatform/tree/master/tutorials/Desktop_Components#tooltips
-    TooltipArea(tooltip = { // composable tooltip content
+
+    TooltipArea(tooltip = {
                            Surface(modifier = Modifier.shadow(4.dp),
                                    color    = tooltipBackground,
                                    shape    = RoundedCornerShape(4.dp),
@@ -232,8 +232,8 @@ fun PictureBox(url: String, description: String, caption: String, defaultImage: 
 }
 
 private fun getImageBitmapFromStream(stream : InputStream) =
-    stream.buffered()                  // kleine Optimierung: auf einem BufferedInputStream arbeiten
-        .use { loadImageBitmap(it) }  // liest ImageBitmap vom Stream
+    stream.buffered()
+        .use { loadImageBitmap(it) }
 
 
 fun Modifier.cursor(cursorId: Int) : Modifier = pointerHoverIcon(PointerIcon(Cursor(cursorId)))

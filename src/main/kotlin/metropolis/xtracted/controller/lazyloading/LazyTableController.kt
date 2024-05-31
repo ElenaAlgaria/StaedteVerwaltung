@@ -40,7 +40,6 @@ class LazyTableController<T : Identifiable>(
     ) {
     lateinit var uiScope: CoroutineScope
 
-    // filtern erst nach einer gewissen 'Ruhezeit'
     private val filterScheduler = Scheduler(200)
 
     private val maxNumberOfEntriesInCache = 100
@@ -50,20 +49,19 @@ class LazyTableController<T : Identifiable>(
     fun getData(id: Int): T =
         cache.computeIfAbsent(id) {
             val deferred = ioScope.async {
-                delay(60) // nur zur Simulation eines langsamen DB-Zugriffs
+                delay(60)
                 repository.read(id)!!
             }
             deferred.invokeOnCompletion {
                 val loadedItem = deferred.getCompleted()
                 cache[id] = loadedItem
-                if (isVisible(id)) {  //es kann sein, dass mittlerweile schon an eine andere Stelle gescrollt wurde
+                if (isVisible(id)) {
                     recompose()
                 }
             }
 
             defaultItem
         }
-
 
     override fun executeAction(action: LazyTableAction): TableState<T> =
         when (action) {
@@ -163,8 +161,6 @@ class LazyTableController<T : Identifiable>(
         )
 
     }
-
-    // einige Hilfsfunktionen
 
     private fun createFilterList(): List<Filter<*>> =
         buildList {

@@ -39,8 +39,8 @@ fun cityRepository(url: String) : CRUDLazyRepository<City> {
         table = "CITY",
         idColumn = ID,
         dataColumns = mapOf(
-            NAME to { it.name.asSql() },
             ID to {it.id.toString()},
+            NAME to { it.name.asSql() },
             LATITUDE to { it.longitude.toString() },
             LONGITUDE to { it.longitude.toString() },
             FEATURE_CLASS to {it.featureClass.asSql()},

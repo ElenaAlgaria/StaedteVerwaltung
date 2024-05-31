@@ -51,7 +51,7 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, on
                 (stringAttribute(
                     id = Id.CAPITAL,
                     value = country.capital,
-                    required = true,
+                    required = false,
                     syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
@@ -63,6 +63,7 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, on
                 (intAttribute(
                     id = Id.POPULATION,
                     value = country.population,
+                    required = true,
                     semanticValidator = {
                         when{
                         it == null -> ValidationResult(false, Message.NO_VALUE)
@@ -71,18 +72,9 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, on
                     })),
 
                 (intAttribute(
-                    id = Id.ISO_NUMERIC,
-                    value = country.isoNumeric,
-                    semanticValidator = {
-                        when {
-                            it == null -> ValidationResult(false, Message.NO_VALUE)
-                            else -> ValidationResult(true, null)
-                        }
-                    })),
-
-                (intAttribute(
                     id = Id.GEONAME_ID,
                     value = country.geoNameId,
+                    required = true,
                     semanticValidator = {
                         when {
                             it == null -> ValidationResult(false, Message.NO_VALUE)
@@ -93,26 +85,26 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, on
                 (stringAttribute(
                     id = Id.CURRENCY_NAME,
                     value = country.currencyName,
-                    required = true,
+                    required = false,
                     syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
                     id = Id.CURRENCY_CODE,
                     value = country.currencyCode,
-                    required = true,
+                    required = false,
                     syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
 
 
                 (stringAttribute(
                     id = Id.PHONE,
                     value = country.phone,
-                    required = true,
+                    required = false,
                     syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
                     id = Id.LANGUAGES,
                     value = country.languages,
-                    required = true,
+                    required = false,
                     syntaxValidator = { (it.length <= 50).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
@@ -123,29 +115,41 @@ fun countryEditorController(id: Int, repository: CRUDLazyRepository<Country>, on
 
                 (doubleAttribute(id                = Id.AREA_IN_SQKM,
                     value             = country.areaSqm,
+                    required = true,
                     semanticValidator = { when {
                         it == null -> ValidationResult(false, Message.NO_VALUE)
                         else       -> ValidationResult(true,  null)
                     }
                     })),
+                (stringAttribute(
+                    id = Id.ISO_ALPHA3,
+                    value = country.isoAlpha3,
+                    required = true,
+                    syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
                     id = Id.NEIGHBOURS,
                     value = country.neighbours,
-                    required = true,
+                    required = false,
                     syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (stringAttribute(
                     id = Id.FIPS_CODE,
                     value = country.fipsCode,
-                    required = true,
+                    required = false,
                     syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) })),
 
-                stringAttribute(
-                    id = Id.ISO_ALPHA3,
-                    value = country.isoAlpha3,
-                    required = true,
-                    syntaxValidator = { (it.length <= 20).asValidationResult(Message.NAME_TOO_LONG) }))
+                (intAttribute(
+                    id = Id.ISO_NUMERIC,
+                    value = country.isoNumeric,
+                    required = false,
+                    semanticValidator = {
+                        when {
+                            it == null -> ValidationResult(false, Message.NO_VALUE)
+                            else -> ValidationResult(true, null)
+                        }
+                    })),
+            )
 
         })
 }
@@ -165,7 +169,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
         asData = { attributes ->
             City(
                 id = id,
-                name = attributes[Id.CITY_NAME],
+                name = attributes[Id.NAME],
                 latitude = attributes[Id.LATITUDE],
                 longitude = attributes[Id.LONGITUDE],
                 featureClass = attributes[Id.FEATURE_CLASS],
@@ -196,12 +200,13 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
                 (stringAttribute(
                     id = Id.ADMIN_1_CODE,
                     value = city.admin1Code,
-                    required = true,
+                    required = false,
                     syntaxValidator = { (it.length <= 25).asValidationResult(Message.NAME_TOO_LONG) })),
 
                 (intAttribute(
                     id = Id.CITY_POPULATION,
                     value = city.population,
+                    required = true,
                     semanticValidator = {
                         when {
                             it == null -> ValidationResult(false, Message.NO_VALUE)
@@ -212,6 +217,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
                 (intAttribute(
                     id = Id.DEM,
                     value = city.dem,
+                    required = true,
                     semanticValidator = {
                         when {
                             it == null -> ValidationResult(false, Message.NO_VALUE)
@@ -222,6 +228,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
                 (intAttribute(
                     id = Id.ELEVATION,
                     value = city.elevation,
+                    required = false,
                     semanticValidator = {
                         when {
                             it == null -> ValidationResult(false, Message.NO_VALUE)
@@ -244,6 +251,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
 
                 (doubleAttribute(id                = Id.LATITUDE,
                     value             = city.latitude,
+                    required = true,
                     semanticValidator = { when {
                         it == null -> ValidationResult(false, Message.NO_VALUE)
                         else       -> ValidationResult(true,  null)
@@ -252,6 +260,7 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
 
                 (doubleAttribute(id                = Id.LONGITUDE,
                     value             = city.longitude,
+                    required = true,
                     semanticValidator = { when {
                         it == null -> ValidationResult(false, Message.NO_VALUE)
                         else       -> ValidationResult(true,  null)
@@ -289,7 +298,6 @@ enum class Id(override val german: String, override val english: String) : Attri
     CURRENCY_CODE("Währungscode", "Currencycode"),
     NEIGHBOURS("Nachbarn", "Neighbours"),
     FIPS_CODE("Bundesstandard für Informationsverarbeitung", "FIPS Code"),
-    CITY_NAME("Name", "Name"),
     LATITUDE("Breitengrad", "Latitude"),
     LONGITUDE("Längengrad", "Longitude"),
     COUNTRY_CODE("Land Code", "Country code"),
@@ -297,7 +305,7 @@ enum class Id(override val german: String, override val english: String) : Attri
     CITY_POPULATION("Population", "Population"),
     ELEVATION("Höhe", "Elevation"),
     DEM("Digitales Höhenmodell", "DEM"),
-    TIMEZONE("Zeitzone", "DEM"),
+    TIMEZONE("Zeitzone", "Timezone"),
     ISO_ALPHA3("ISO_ALPHA3", "ISO_ALPHA3"),
     GEONAME_ID("GeoName ID", "GeoName ID"),
     MODIFICATION_DATE("Modifizierungsdatum", "Modification date"),

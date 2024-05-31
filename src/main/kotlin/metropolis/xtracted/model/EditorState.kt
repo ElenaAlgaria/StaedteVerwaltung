@@ -13,6 +13,5 @@ data class EditorState<T>(val title      : String,
 }
 
 operator fun<T: Any> EditorState<*>.get(id : AttributeId) : Attribute<T>  {
-    println("get")
     return attributes.find{it.id == id} as Attribute<T>
 }

@@ -74,8 +74,7 @@ private fun<T: Any> InputElement(attr   : Attribute<T>,
             verticalAlignment     = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)){
 
-            // Waiting for a bug-fix, sometimes the cursor is not updated correctly (since Compose 1.3.1)
-            // in the meantime here is a strange workaround:
+
             var text by remember { mutableStateOf(valueAsText) }
 
             LaunchedEffect(valueAsText) {
@@ -83,7 +82,7 @@ private fun<T: Any> InputElement(attr   : Attribute<T>,
             }
 
             BasicTextField(value         = text,
-                           onValueChange = { text = it //part of the workaround
+                           onValueChange = { text = it
                                              trigger(EditorAction.Update(attr, it)) },
                            singleLine    = true,
                            readOnly      = readOnly,

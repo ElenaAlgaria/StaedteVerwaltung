@@ -40,7 +40,6 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
                  nameOrder = nameOrder)
 
     fun read(id: Int) : T?  {
-        println("vorher?")
        return readFirst(url     = url,
             table   = table,
             columns = dataColumns.keys.joinToString(),
@@ -50,7 +49,6 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
 
 
     fun update(data: T){
-        println("update")
         val valueUpdates = StringBuilder()
         dataColumns.entries.forEachIndexed { index, entry ->
             valueUpdates.append("${entry.key}")

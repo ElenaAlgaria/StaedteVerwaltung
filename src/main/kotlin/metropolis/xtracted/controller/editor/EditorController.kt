@@ -15,10 +15,10 @@ import metropolis.xtracted.repository.Identifiable
 
 
 
-class EditorController<T: Identifiable>(val id              : Int,                        // der EditorController verwaltet die Daten mit der ID 'id'
+class EditorController<T: Identifiable>(val id              : Int,
                                         val repository      : CRUDLazyRepository<T>,
-                                        val asData          : (List<Attribute<*>>) -> T,  // die Attribute müssen in eine Instanz der data class umgewandelt werden können. Das wird z.B. für das Speichern benötigt
-                                        val asAttributeList : (T) -> List<Attribute<*>>,  // die Instanz der data class wird in eine Liste von Attributen gemappt. Damit werden die von der DB gelieferten Daten im Formular editierbar
+                                        val asData          : (List<Attribute<*>>) -> T,
+                                        val asAttributeList : (T) -> List<Attribute<*>>,
                                         title               : String,
                                         locale              : Locale,
                                         testMode: Boolean = false,
@@ -27,13 +27,13 @@ class EditorController<T: Identifiable>(val id              : Int,              
                                         val onSave: () -> Unit) :
         ControllerBase<EditorState<T>, EditorAction>(initialState = EditorState(title      = title,
                                                                                 locale     = locale,
-                                                                                attributes = asAttributeList(repository.read(id) ?: onInit)), // der Editor liest initial die Daten von der DB
+                                                                                attributes = asAttributeList(repository.read(id) ?: onInit)),
                                                      testMode = testMode) {
 
 
-    private val undoController = UndoController(debounceStart = state)  // jeder Editor unterstützt undo/redo
+    private val undoController = UndoController(debounceStart = state)
 
-    val undoState : UndoState  // Zugriff auf den aktuellen UndoState des UndoControllers. Dadurch muss der UndoController nicht exponiert werden
+    val undoState : UndoState
         get() = undoController.state
 
 
@@ -73,17 +73,13 @@ class EditorController<T: Identifiable>(val id              : Int,              
     }
 
     private fun save() : EditorState<T> {
-        println("Save")
         asData(state.attributes)
-        println("Save1.1")
         repository.update(asData(state.attributes))
         val updatedAttributes = buildList {
-            println("save2")
             for(attribute in state.attributes){
                 add(attribute.copy(persistedValue = attribute.value))
             }
         }
-        println("save3")
             onSave()
 
         return state.copy(attributes =  updatedAttributes)
@@ -106,11 +102,9 @@ class EditorController<T: Identifiable>(val id              : Int,              
         return nextEditorState
     }
 
-    // durch das Ändern eines Attribut-Werts können sich die Werte anderer Attribute ändern (der dependentAttributes).
-    // Daher wird eine Liste der geänderten Attribute zurückgegeben.
     private fun<T : Any> updateAffectedAttributes(attribute: Attribute<T>, valueAsText: String): List<Attribute<*>> {
         if(attribute.readOnly){
-            return listOf(attribute) // wenn das Attribut readonly ist, wird es nicht geändert
+            return listOf(attribute)
         }
         else {
             if(attribute.required && valueAsText.isBlank()){
@@ -120,7 +114,6 @@ class EditorController<T: Identifiable>(val id              : Int,              
 
             var validationResult = attribute.syntaxValidator(valueAsText)
             if(validationResult.valid){
-                //syntaktisch korrekte Eingaben können auch konvertiert und auf semantische Korrektheit geprüft werden
                 validationResult = attribute.semanticValidator(attribute.converter(valueAsText))
             }
 
@@ -162,13 +155,12 @@ class EditorController<T: Identifiable>(val id              : Int,              
                 val idx = indexOfFirst { attribute.id == it.id }
 
                 removeAt(idx)
-                add(idx, attribute) // das neue Attribut sollte wieder an der gleichen Stelle eingefügt werden
+                add(idx, attribute)
             }
         }
 
 }
 
-// damit kann mittels [attributeId] auf den Wert eines Attributs zugegriffen werden, z.B. val name = attributes[NAME]
 operator fun<T> List<Attribute<*>>.get(attributeId: AttributeId) : T = first{it.id == attributeId}.value as T
 
 

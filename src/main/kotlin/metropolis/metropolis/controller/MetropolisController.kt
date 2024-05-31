@@ -47,11 +47,13 @@ class MetropolisController(
             ),
             sortDirective = SortDirective(CountryColumn.ISO_ALPHA2, SortDirection.ASC), ""
         )
+
         switchToCountryEditor(idList.first())
 
         state.activeCountryExplorerController.executeAction(
             SetFilter(state.activeCountryExplorerController.state.columns[1], isoAlpha2, "")
         )
+
     }
 
     private fun switchToCityExplorer(nameCity: String, countryCode: String) {
@@ -78,8 +80,8 @@ class MetropolisController(
     private fun switchToCountryEditor(id: Int) {
         if (id < 0) {
             val data = Country(
-                id, isoNumeric = id, isoAlpha3 = "", isoAlpha2 = "",
-                name = "", areaSqm = 0.0, population = 0, currencyCode = "", continent = "", geoNameId = 0,
+                id, isoNumeric = id, isoAlpha3 = "XY", isoAlpha2 = "XY",
+                name = "XY", areaSqm = 0.0, population = 0, currencyCode = "XY", continent = "XY", geoNameId = 0,
             )
             val key = countryRepository.createKey(data)
             state = state.copy(
@@ -100,9 +102,9 @@ class MetropolisController(
     private fun switchToCityEditor(id: Int) {
         if (id < 0) {
             val data = City(
-                id, name = "", latitude = 0.0, longitude = 0.0,
-                featureCode = "", featureClass = "", countryCode = "", admin1Code = "", population = 0, elevation = 0,
-                dem = 0, timezone = "", modificationDate = ""
+                id, name = "XY", latitude = 0.0, longitude = 0.0,
+                featureCode = "XY", featureClass = "XY", countryCode = "XY", admin1Code = "", population = 0, elevation = 0,
+                dem = 0, timezone = "XY", modificationDate = "XY"
             )
             val key = cityRepository.createKey(data)
             state = state.copy(

@@ -39,8 +39,6 @@ enum class CountryColumn : DbColumn {
 }
 
 
-// eine Hilfs-Funktion, die das LazyRepository für Countries konfiguriert.
-
 fun countryRepository(url: String) =
     CRUDLazyRepository(url = url,
         table = "COUNTRY",

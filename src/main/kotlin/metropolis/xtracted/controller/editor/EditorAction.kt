@@ -12,7 +12,6 @@ sealed class EditorAction(
         override val icon   : ImageVector? = null,
         override val enabled: Boolean      = true) : Action {
 
-    // Most important Action of an editor: Update the value of an attribute
     class  Update(val attribute: Attribute<*>, val value: String) : EditorAction("Update ${attribute.id.translate(Locale.ENGLISH)}", null, !attribute.readOnly)
 
     class  Save(enabled: Boolean)        : EditorAction("Save",   Icons.Filled.Save,   enabled)

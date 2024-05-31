@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
  * After execution the scheduler checks if a new task is available, if not the scheduler is paused.
  */
 class Scheduler(private val delayInMillis: Long = 50L) {
-   // private val scope = CoroutineScope(newFixedThreadPoolContext(10, "SchedulerContext"))
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var inProcess = false
