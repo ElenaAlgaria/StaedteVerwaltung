@@ -17,7 +17,7 @@ fun <T> readFirst(url: String, table: String, columns: String = "*", where: Stri
             val logger: Logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
 
             val sql = "SELECT $columns FROM $table WHERE $where"
-
+            println("its me rF: $columns")
             try {
                 val start = System.currentTimeMillis()
 
@@ -43,7 +43,7 @@ fun readIds(url: String, table: String, idColumn: DbColumn, filters: List<Filter
     DriverManager.getConnection(url)
         .use {
             val logger: Logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
-
+            println("vlt")
             val orderBy = if(null == sortDirective.column) "" else "ORDER BY  ${sortDirective.column}  ${sortDirective.direction}"
             val orderByName = if(nameOrder != "") {"ORDER BY CASE WHEN Name = '$nameOrder' THEN 0 ELSE 1 End" } else {orderBy}
             val sql = "SELECT ${idColumn} FROM $table ${filters.asSql()} $orderByName"
@@ -183,6 +183,7 @@ fun insertAndCreateKey(url: String, insertStmt: String) : Int =
 
             try {
                 val start = System.currentTimeMillis()
+
 
                 val rs = it.createStatement().executeQuery(insertStmt)
 

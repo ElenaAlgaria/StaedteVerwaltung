@@ -8,12 +8,10 @@ import metropolis.metropolis.data.Country
 import metropolis.xtracted.repository.CRUDLazyRepository
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
 import metropolis.editor.controller.cityEditorController
 import metropolis.explorer.controller.cityExplorerController
 import metropolis.metropolis.repository.CityColumn
 import metropolis.metropolis.repository.CountryColumn
-import metropolis.xtracted.controller.editor.EditorAction
 import metropolis.xtracted.controller.lazyloading.LazyTableAction
 import metropolis.xtracted.controller.lazyloading.LazyTableAction.SetFilter
 import metropolis.xtracted.data.Filter
@@ -140,8 +138,10 @@ class MetropolisController(
                 switchToCityEditor(2960)
                 state.activeCityExplorerController.triggerAction(LazyTableAction.Reload(null))
             },
-            onSave = { state.activeCityExplorerController.triggerAction(LazyTableAction.Reload(id)) }
+            onSave = {state.activeCityExplorerController.triggerAction(LazyTableAction.Reload(id))  }
+
         )
+
 
     fun triggerAction(action: MetropolisAction) {
         when (action) {

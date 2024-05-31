@@ -25,6 +25,7 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
              }
          }
      }
+
      return insertAndCreateKey(url        = url,
          insertStmt = """INSERT INTO $table ($columnsCreate) VALUES ($valueCreate) RETURNING $idColumn """.trimMargin())
 
@@ -38,15 +39,18 @@ class CRUDLazyRepository<T: Identifiable>(private val url        : String,
                 sortDirective = sortDirective,
                  nameOrder = nameOrder)
 
-    fun read(id: Int) : T?  =
-        readFirst(url     = url,
+    fun read(id: Int) : T?  {
+        println("vorher?")
+       return readFirst(url     = url,
             table   = table,
-            columns = "$idColumn, " + dataColumns.keys.joinToString(),
+            columns = dataColumns.keys.joinToString(),
             where   = "$idColumn = $id",
             map     = { mapper() })
+    }
 
 
     fun update(data: T){
+        println("update")
         val valueUpdates = StringBuilder()
         dataColumns.entries.forEachIndexed { index, entry ->
             valueUpdates.append("${entry.key}")

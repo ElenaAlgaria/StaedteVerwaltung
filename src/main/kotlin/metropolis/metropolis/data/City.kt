@@ -5,7 +5,7 @@ import metropolis.xtracted.repository.Identifiable
 
 data class City (
     override val id     : Int,
-    val name: String,
+    val name: String = "",
     val latitude: Double,
     val longitude: Double,
     val featureCode: String,

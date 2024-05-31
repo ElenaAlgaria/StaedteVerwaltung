@@ -24,35 +24,34 @@ enum class CityColumn : DbColumn {
     NAME,
     LATITUDE,
     LONGITUDE,
+    FEATURE_CLASS,
+    FEATURE_CODE,
     COUNTRY_CODE,
     ADMIN1_CODE,
     POPULATION,
     ELEVATION,
     DEM,
     TIMEZONE,
-    MODIFICATION_DATE,
-    FEATURE_CODE,
-    FEATURE_CLASS
+    MODIFICATION_DATE
 }
-
-fun cityRepository(url: String) =
-    CRUDLazyRepository(url = url,
+fun cityRepository(url: String) : CRUDLazyRepository<City> {
+ return   CRUDLazyRepository(url = url,
         table = "CITY",
         idColumn = ID,
         dataColumns = mapOf(
-            ID to {it.id.toString()},
             NAME to { it.name.asSql() },
+            ID to {it.id.toString()},
             LATITUDE to { it.longitude.toString() },
             LONGITUDE to { it.longitude.toString() },
+            FEATURE_CLASS to {it.featureClass.asSql()},
+            FEATURE_CODE to {it.featureCode.asSql()},
             COUNTRY_CODE to { it.countryCode.asSql() },
             ADMIN1_CODE to { it.admin1Code.asSql() },
             POPULATION to { it.population.toString() },
             ELEVATION to { it.elevation?.toString() },
             DEM to { it.dem.toString() },
             TIMEZONE to { it.timezone.asSql() },
-            MODIFICATION_DATE to {it.modificationDate.asSql()},
-            FEATURE_CODE to {it.featureCode.asSql()},
-            FEATURE_CLASS to {it.featureClass.asSql()}
+            MODIFICATION_DATE to {it.modificationDate.asSql()}
 
         ),
         mapper = {
@@ -61,17 +60,20 @@ fun cityRepository(url: String) =
                 name = getString("$NAME"),
                 latitude = getDouble("$LATITUDE"),
                 longitude = getDouble("$LONGITUDE"),
+                featureCode = getString("$FEATURE_CODE"),
+                featureClass = getString("$FEATURE_CLASS"),
                 countryCode = getString("$COUNTRY_CODE"),
                 admin1Code = getString("$ADMIN1_CODE"),
                 population = getInt("$POPULATION"),
                 elevation = getInt("$ELEVATION"),
                 dem = getInt("$DEM"),
                 timezone = getString("$TIMEZONE"),
-                modificationDate = getString("${MODIFICATION_DATE}"),
-                featureCode = getString("${FEATURE_CODE}"),
-                featureClass = getString("${FEATURE_CLASS}")
+                modificationDate = getString("$MODIFICATION_DATE"),
                 )
         }
     )
+
+
+}
 
 

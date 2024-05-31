@@ -50,7 +50,7 @@ fun countryRepository(url: String) =
             ISO_NUMERIC to { it.isoNumeric.toString() },
             FIPS_CODE to { it.fipsCode?.asSql() },
             NAME to { it.name.asSql() },
-            CAPITAL to { it.capital.toString() },
+            CAPITAL to { it.capital?.asSql() },
             AREA_IN_SQKM to { it.areaSqm.toString() },
             POPULATION to { it.population.toString() },
             CONTINENT to { it.continent.asSql() },

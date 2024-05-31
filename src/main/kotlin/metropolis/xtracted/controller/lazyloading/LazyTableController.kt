@@ -131,7 +131,6 @@ class LazyTableController<T : Identifiable>(
                 )
             }
         }
-        println("Filter")
         return state
     }
 
@@ -157,7 +156,7 @@ class LazyTableController<T : Identifiable>(
             }
 
         scrollToIdx(0)
-        println("Sort")
+
         return state.copy(
             currentSort = nextSortDirective,
             allIds = repository.readFilteredIds(createFilterList(), nextSortDirective, "")

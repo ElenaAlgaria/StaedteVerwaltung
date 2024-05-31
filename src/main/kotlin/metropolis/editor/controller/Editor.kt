@@ -168,14 +168,14 @@ fun cityEditorController(id: Int, repository: CRUDLazyRepository<City>, onDelete
                 name = attributes[Id.CITY_NAME],
                 latitude = attributes[Id.LATITUDE],
                 longitude = attributes[Id.LONGITUDE],
+                featureClass = attributes[Id.FEATURE_CLASS],
+                featureCode = attributes[Id.FEATURE_CODE],
                 countryCode = attributes[Id.COUNTRY_CODE],
                 admin1Code = attributes[Id.ADMIN_1_CODE],
                 population = attributes[Id.CITY_POPULATION],
                 elevation = attributes[Id.ELEVATION],
                 dem = attributes[Id.DEM],
                 timezone = attributes[Id.TIMEZONE],
-                featureClass = attributes[Id.FEATURE_CLASS],
-                featureCode = attributes[Id.FIPS_CODE],
                 modificationDate = attributes[Id.MODIFICATION_DATE]
             )
         },

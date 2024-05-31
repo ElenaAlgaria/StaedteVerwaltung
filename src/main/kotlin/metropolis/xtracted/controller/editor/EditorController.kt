@@ -30,6 +30,7 @@ class EditorController<T: Identifiable>(val id              : Int,              
                                                                                 attributes = asAttributeList(repository.read(id) ?: onInit)), // der Editor liest initial die Daten von der DB
                                                      testMode = testMode) {
 
+
     private val undoController = UndoController(debounceStart = state)  // jeder Editor unterstützt undo/redo
 
     val undoState : UndoState  // Zugriff auf den aktuellen UndoState des UndoControllers. Dadurch muss der UndoController nicht exponiert werden
@@ -72,14 +73,18 @@ class EditorController<T: Identifiable>(val id              : Int,              
     }
 
     private fun save() : EditorState<T> {
+        println("Save")
+        asData(state.attributes)
+        println("Save1.1")
         repository.update(asData(state.attributes))
         val updatedAttributes = buildList {
+            println("save2")
             for(attribute in state.attributes){
                 add(attribute.copy(persistedValue = attribute.value))
             }
         }
+        println("save3")
             onSave()
-        println("hfhfhfhh")
 
         return state.copy(attributes =  updatedAttributes)
     }
