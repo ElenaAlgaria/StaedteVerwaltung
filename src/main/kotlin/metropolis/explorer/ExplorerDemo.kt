@@ -8,14 +8,16 @@ import metropolis.metropolis.repository.cityRepository
 import metropolis.explorer.view.ExplorerWindow
 import metropolis.metropolis.repository.countryRepository
 import metropolis.xtracted.repository.urlFromResources
+import metropolis.xtracted.repository.urlFromWorkingDirectory
 
 
 fun main() {
-    val url = "/data/metropolisDB".urlFromResources()
+    val url = "/data/metropolisDB".urlFromWorkingDirectory()
 
     val countryRepository = countryRepository(url)
     val cityRepository = cityRepository(url)
 
+    // Notiz für die Dozenten: Controller switchen für die Ansicht des anderen Explorers
     val countryController = countryExplorerController(countryRepository)
     val cityController = cityExplorerController(cityRepository)
 
