@@ -140,7 +140,7 @@ class MetropolisController(
                 switchToCityEditor(2960)
                 state.activeCityExplorerController.triggerAction(LazyTableAction.Reload(null))
             },
-            onSave = {state.activeCityExplorerController.triggerAction(LazyTableAction.Reload(id))  }
+            onSave = {state.activeCityExplorerController.triggerAction(LazyTableAction.Reload(id))}
 
         )
 

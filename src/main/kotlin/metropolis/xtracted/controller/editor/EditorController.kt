@@ -69,7 +69,7 @@ class EditorController<T: Identifiable>(val id              : Int,
     private fun delete(): EditorState<T>{
         repository.delete(id)
         onDeleted()
-        return state.copy(attributes = asAttributeList(repository.read(2960)!!))
+        return state
     }
 
     private fun save() : EditorState<T> {

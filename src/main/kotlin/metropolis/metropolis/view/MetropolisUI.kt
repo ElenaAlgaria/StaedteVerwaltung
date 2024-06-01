@@ -42,7 +42,6 @@ fun MetropolisUi(state: MetropolisState, trigger: (MetropolisAction) -> Unit) {
             Column(modifier = Modifier.weight(0.5f)) {
 
                 Card(elevation = 2.dp, modifier = Modifier.weight(0.2f).fillMaxSize()) {
-
                     ExplorerUI(
                         state = activeCountryExplorerController.state,
                         dataProvider = { activeCountryExplorerController.getData(it) },
