@@ -70,40 +70,38 @@ Es können in diesem Assignment maximal 52 Punkte erreicht werden. Der Fokus lie
 [cols=3, format=dsv]
 |===
 Bereich:Mögliche Punktzahl:Erreichte Punktzahl
-*Explorer*:*10 Pt. Total*: *0 Pt.*
-Darstellung des City Explorers:2 Pt.:0 Pt.
-Darstellung des Country Explorers:2 Pt.:0 Pt.
-Lazyloading:4 Pt.:0 Pt.
-Sortier- und Filtermögmlickeit auf mindestens 4 Spalten:2 Pt.:0 Pt.
-
-*Editor*:*14 Pt. Total*: *0 Pt.*
-Darstellung des City Editors:2 Pt.:0 Pt.
-Darstellung des Country Editors:2 Pt.:0 Pt.
-Erstellung eines neuen Eintrages in der Datebank (Städte / Länder):2 Pt.:0 Pt.
-Löschen eines Eintrages in der Datebank (Städte / Länder):2 Pt.:0 Pt.
-Updaten eines Eintrages in der Datebank (Städte / Länder):2 Pt.:0 Pt.
-Undo / Redo Funktionalität:2 Pt.:0 Pt.
-Mehrsprachigkeit:2 Pt.:0 Pt.
-
-*Metropolis*:*16 Pt. Total*:*0 Pt.*
-City Explorer und City Editor sind verbunden:1 Pt.:0 Pt.
-County Explorer und County Editor sind verbunden:1 Pt.:0 Pt.
-Selektion im Explorer zeigt den entsprechnenden Editor an:2 Pt.:0 Pt.
-Die modifizierten Daten werden im Explorer korrekt dargestellt:4 Pt.:0 Pt.
-Die Applikation verbindet die Explorer und Editoren zu einer Gesamtapplikation:8 Pt.:0 Pt.
-
-*Architektur*:*12 Pt. Total*:*0 Pt.*
-Klare Aufgabenverteilung zwischen Model und View:3 Pt.:0 Pt.
-Saubere Aufteilung der Composables in Sub-Composables:2 Pt.:0 Pt.
-Code Qualitätt:5 Pt.:0 Pt.
-Korrekte Anwendung von Coroutines:2 Pt.:0 Pt.
+*Explorer*:*10 Pt. Total*: *10.0 Pt.*
+Darstellung des City Explorers:2 Pt.:2.0 Pt.
+Darstellung des Country Explorers:2 Pt.:2.0 Pt.
+Lazyloading:4 Pt.:4.0 Pt.
+Sortier- und Filtermögmlickeit auf mindestens 4 Spalten:2 Pt.:2.0 Pt.
+*Editor*:*14 Pt. Total*: *13.0 Pt.*
+Darstellung des City Editors:2 Pt.:2.0 Pt.
+Darstellung des Country Editors:2 Pt.:2.0 Pt.
+Erstellung eines neuen Eintrages in der Datebank (Städte / Länder):2 Pt.:2.0 Pt.
+Löschen eines Eintrages in der Datebank (Städte / Länder):2 Pt.:2.0 Pt.
+Updaten eines Eintrages in der Datebank (Städte / Länder):2 Pt.:2.0 Pt.
+Undo / Redo Funktionalität:2 Pt.:2.0 Pt.
+Mehrsprachigkeit:2 Pt.:1.0 Pt.
+*Metropolis*:*16 Pt. Total*: *15.5 Pt.*
+City Explorer und City Editor sind verbunden:1 Pt.:1.0 Pt.
+County Explorer und County Editor sind verbunden:1 Pt.:1.0 Pt.
+Selektion im Explorer zeigt den entsprechnenden Editor an:2 Pt.:2.0 Pt.
+Die modifizierten Daten werden im Explorer korrekt dargestellt:4 Pt.:3.5 Pt.
+Die Applikation verbindet die Explorer und Editoren zu einer Gesamtapplikation:8 Pt.:8.0 Pt.
+*Architektur*:*12 Pt. Total*: *11.0 Pt.*
+Klare Aufgabenverteilung zwischen Model und View:3 Pt.:3.0 Pt.
+Saubere Aufteilung der Composables in Sub-Composables:2 Pt.:2.0 Pt.
+Code Qualität:5 Pt.:4.0 Pt.
+Korrekte Anwendung von Coroutines:2 Pt.:2.0 Pt.
 |===
 
 Die Note wird wie folgt berechnet und macht 50% der Gesamtnote aus.
 
-Note = ((Erreichte Punkte / 52) * 5) + 1
+Note = ((Erreichte Punkte / 52) * 5) + 1 + 0,5 (Metropolis Award) => *6,35*
 
-
+Kommentar:
+Es wird nur der Expolerer übersetzt. Die aktualisierten Daten werden erst nach der Persistierung im Explorer angezeigt. Ansonstem sehr gute Umsetzung. :)
 
 === Compose Desktop Application
 Sie können eine "doppelklickbare" Applikation und einen dazugehörigen Installer generieren lassen.
